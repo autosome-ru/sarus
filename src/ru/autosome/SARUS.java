@@ -41,19 +41,16 @@ public class SARUS {
       pwm = PWM.makeDummy(pwm.length());
     }
 
-    ArrayList<String> namesOfSequences = new ArrayList<String>();
-    ArrayList<String> sequences = Assistant.readFastaFile(fasta_filename, namesOfSequences);
-
-    for (int s = 0; s < sequences.size(); s++) {
+    for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {
       if (!suppressNames) {
-        System.out.println(">" + namesOfSequences.get(s));
+        System.out.println(">" + namedSequence.getName());
       }
 
       Sequence seq;
       if (naive) {
-        seq = MSequence.sequenceFromString(sequences.get(s));
+        seq = MSequence.sequenceFromString(namedSequence.getSequence());
       } else {
-        seq = SMSequence.sequenceFromString(sequences.get(s));
+        seq = SMSequence.sequenceFromString(namedSequence.getSequence());
       }
 
       if (args[2].matches("besthit")) {
