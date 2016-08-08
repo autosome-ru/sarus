@@ -20,41 +20,11 @@ public class Assistant {
 
 
   public static ArrayList<String> readFastaFile(String path, ArrayList<String> names) throws IOException {
-
     ArrayList<String> setOfSequences = new ArrayList<String>();
-    StringBuilder sb = new StringBuilder();
-    String tempLine;
-    BufferedReader br = new BufferedReader(new FileReader(path));
-
-    boolean itIsAName = false;
-
-    while ((tempLine = br.readLine()) != null) {
-      if (!tempLine.isEmpty() && tempLine.charAt(0) == '>') {
-        if (itIsAName) {
-          tempLine = names.get(names.size() - 1).concat(tempLine.substring(1));
-          names.set(names.size() - 1, tempLine);
-
-        } else {
-          if (sb.length() > 0) {
-            setOfSequences.add(sb.toString());
-//                        sb.setLength(0);
-            sb = new StringBuilder();
-          }
-          names.add(tempLine.substring(1));
-        }
-        itIsAName = true;
-
-      } else {
-        tempLine = tempLine.trim();
-        if (!tempLine.isEmpty()) {
-          sb.append(tempLine);
-          itIsAName = false;
-        }
-      }
+    for (NamedSequence namedSequence: FastaReader.fromFile(path)) {
+      setOfSequences.add(namedSequence.getSequence());
+      names.add(namedSequence.getName());
     }
-    setOfSequences.add(sb.toString());
-
-    br.close();
     return setOfSequences;
   }
 
