@@ -9,81 +9,59 @@ public class SARUS {
   //matrix: first string - name; row - position, column - nucleotide
 
   public static void main(String[] args) throws IOException {
-
-    boolean N_isPermitted = true;
-    boolean suppressNames = false;
-    boolean transpose = false;
-
-    if (args.length >= 3) {
-
-      if (Arrays.asList(args).contains("skipn") || Arrays.asList(args).contains("nskip")) N_isPermitted = false;
-      if (Arrays.asList(args).contains("suppress")) suppressNames = true;
-      if (Arrays.asList(args).contains("transpose")) transpose = true;
-
-      ArrayList<String> namesOfSequences = new ArrayList<String>();
-      ArrayList<String> sequences = Assistant.readFastaFile(args[0], namesOfSequences);
-
-      if (!(Arrays.asList(args).contains("naive"))) {
-
-        PWM sm_pwm = SMPWM.readSMPWM(args[1], N_isPermitted, transpose);
-        PWM revcomp_sm_pwm = sm_pwm.revcomp();
-
-        // replace with fake pwm if 1-strand search is used
-        if (Arrays.asList(args).contains("direct") || Arrays.asList(args).contains("forward")) {
-          revcomp_sm_pwm = PWM.makeDummy(revcomp_sm_pwm.length());
-        } else {
-          if (Arrays.asList(args).contains("revcomp") || Arrays.asList(args).contains("reverse")) {
-            sm_pwm = PWM.makeDummy(sm_pwm.length());
-          }
-        }
-
-        for (int s = 0; s < sequences.size(); s++) {
-
-          if (!suppressNames) System.out.println(">" + namesOfSequences.get(s));
-
-          SMSequence sm_seq = SMSequence.sequenceFromString(sequences.get(s));
-
-          if (args[2].matches("besthit")) {
-            sm_seq.bestHit(sm_pwm, revcomp_sm_pwm);
-          } else {
-            double threshold = Double.parseDouble(args[2]);
-            sm_seq.scan(sm_pwm, revcomp_sm_pwm, threshold);
-          }
-
-        }
-      } else {
-
-        PWM mpwm = MPWM.readMPWM(args[1], N_isPermitted, transpose);
-        PWM revcomp_mpwm = mpwm.revcomp();
-
-        // replace with fake pwm if 1-strand search is used
-        if (Arrays.asList(args).contains("direct")) {
-          revcomp_mpwm = PWM.makeDummy(revcomp_mpwm.length());
-        } else {
-          if (Arrays.asList(args).contains("revcomp")) {
-            mpwm = PWM.makeDummy(mpwm.length());
-          }
-        }
-
-        for (int s = 0; s < sequences.size(); s++) {
-
-          if (!suppressNames) System.out.println(">" + namesOfSequences.get(s));
-
-          MSequence mseq = MSequence.sequenceFromString(sequences.get(s));
-
-          if (args[2].matches("besthit")) {
-            mseq.bestHit(mpwm, revcomp_mpwm);
-          } else {
-            double threshold = Double.parseDouble(args[2]);
-            mseq.scan(mpwm, revcomp_mpwm, threshold);
-          }
-
-        }
-      }
-    } else {
+    if (args.length < 3) {
       System.err.println("SPRY-SARUS command line: <sequences.multifasta> <weight.matrix> <threshold>|besthit [suppress] [direct] [revcomp] [skipn] [transpose]");
-
+      System.exit(1);
     }
 
+    boolean N_isPermitted = !(Arrays.asList(args).contains("skipn") || Arrays.asList(args).contains("nskip"));
+    boolean suppressNames = Arrays.asList(args).contains("suppress");
+    boolean transpose = Arrays.asList(args).contains("transpose");
+    boolean naive = Arrays.asList(args).contains("naive");
+    boolean only_direct = (Arrays.asList(args).contains("direct") || Arrays.asList(args).contains("forward"));
+    boolean only_revcomp = (Arrays.asList(args).contains("revcomp") || Arrays.asList(args).contains("reverse"));
+
+    String fasta_filename = args[0];
+    String pwm_filename = args[1];
+
+    PWM pwm, revcomp_pwm;
+    if (naive) {
+      pwm = MPWM.readMPWM(pwm_filename, N_isPermitted, transpose);
+    } else {
+      pwm = SMPWM.readSMPWM(pwm_filename, N_isPermitted, transpose);
+    }
+    revcomp_pwm = pwm.revcomp();
+
+    // replace with fake pwm if 1-strand search is used
+    if (only_direct && only_revcomp) {
+      throw new IllegalArgumentException("Only-direct and only-revcomp modes are specified simultaneously");
+    } else if (only_direct) {
+      revcomp_pwm = PWM.makeDummy(revcomp_pwm.length());
+    } else if (only_revcomp) {
+      pwm = PWM.makeDummy(pwm.length());
+    }
+
+    ArrayList<String> namesOfSequences = new ArrayList<String>();
+    ArrayList<String> sequences = Assistant.readFastaFile(fasta_filename, namesOfSequences);
+
+    for (int s = 0; s < sequences.size(); s++) {
+      if (!suppressNames) {
+        System.out.println(">" + namesOfSequences.get(s));
+      }
+
+      Sequence seq;
+      if (naive) {
+        seq = MSequence.sequenceFromString(sequences.get(s));
+      } else {
+        seq = SMSequence.sequenceFromString(sequences.get(s));
+      }
+
+      if (args[2].matches("besthit")) {
+        seq.bestHit(pwm, revcomp_pwm);
+      } else {
+        double threshold = Double.parseDouble(args[2]);
+        seq.scan(pwm, revcomp_pwm, threshold);
+      }
+    }
   }
 }

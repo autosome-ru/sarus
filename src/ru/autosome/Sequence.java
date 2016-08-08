@@ -17,9 +17,9 @@ public abstract class Sequence {
     this.sequence = sequence;
   }
 
-  abstract void scan(PWM pwm, PWM revComp_pwm, double threshold);
+  public abstract void scan(PWM pwm, PWM revComp_pwm, double threshold);
 
-  abstract void bestHit(PWM pwm, PWM revComp_pwm);
+  public abstract void bestHit(PWM pwm, PWM revComp_pwm);
 
   void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
 

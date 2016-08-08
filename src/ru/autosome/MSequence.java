@@ -30,7 +30,7 @@ public class MSequence extends Sequence {
   }
 
   @Override
-  void scan(PWM pwm, PWM revComp_pwm, double threshold) {
+  public void scan(PWM pwm, PWM revComp_pwm, double threshold) {
 
     //if (pwm.getClass() != MPWM.class || revComp_pwm.getClass() != MPWM.class)
     //  throw new RuntimeException();
@@ -40,7 +40,7 @@ public class MSequence extends Sequence {
   }
 
   @Override
-  void bestHit(PWM pwm, PWM revComp_pwm) {
+  public void bestHit(PWM pwm, PWM revComp_pwm) {
     //if (pwm.getClass() != MPWM.class || revComp_pwm.getClass() != MPWM.class)
     //throw new RuntimeException();
 
