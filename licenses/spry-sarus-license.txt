@@ -1,0 +1,1 @@
+SPRY-SARUS is distributed under the WTFPL (see 'copying' for details).
