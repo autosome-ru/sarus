@@ -17,17 +17,6 @@ import java.util.List;
 
 
 public class Assistant {
-
-
-  public static ArrayList<String> readFastaFile(String path, ArrayList<String> names) throws IOException {
-    ArrayList<String> setOfSequences = new ArrayList<String>();
-    for (NamedSequence namedSequence: FastaReader.fromFile(path)) {
-      setOfSequences.add(namedSequence.getSequence());
-      names.add(namedSequence.getName());
-    }
-    return setOfSequences;
-  }
-
   static byte charToByte(char ch) {
     switch (Character.toLowerCase(ch)) {
       case 'a':
