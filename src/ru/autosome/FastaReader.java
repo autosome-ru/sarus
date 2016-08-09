@@ -1,18 +1,27 @@
 package ru.autosome;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Iterator;
-import java.util.Scanner;
 
 public class FastaReader implements Iterable<NamedSequence> {
-  final Scanner scanner;
-  FastaReader(Scanner scanner) {
-    this.scanner = scanner;
+  final BufferedReader reader;
+  boolean alreadyGotIterator = false;
+  FastaReader(BufferedReader reader) {
+    this.reader = reader;
+  }
+
+  @Override
+  public Iterator<NamedSequence> iterator() {
+    if (!alreadyGotIterator) {
+      alreadyGotIterator = true;
+      return new FastaScanner(reader);
+    } else {
+      return null;
+    }
   }
 
   public static FastaReader fromFile(File file) throws FileNotFoundException {
-    return new FastaReader(new Scanner(file));
+    return new FastaReader(new BufferedReader(new FileReader(file), 10*1024*1024));
   }
 
   public static FastaReader fromFile(String filename) throws FileNotFoundException {
@@ -20,11 +29,6 @@ public class FastaReader implements Iterable<NamedSequence> {
   }
 
   public static FastaReader fromString(String string) {
-    return new FastaReader(new Scanner(string));
-  }
-
-  @Override
-  public Iterator<NamedSequence> iterator() {
-    return new FastaScanner(scanner);
+    return new FastaReader(new BufferedReader(new StringReader(string)));
   }
 }

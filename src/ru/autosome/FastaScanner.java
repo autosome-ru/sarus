@@ -1,47 +1,58 @@
 package ru.autosome;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Iterator;
-import java.util.Scanner;
 
 public class FastaScanner implements Iterator<NamedSequence> {
-  final Scanner scanner;
-  private boolean closed;
+  private String nextLine;
+  BufferedReader reader;
+  FastaScanner(BufferedReader reader) {
+    this.reader = reader;
+    this.nextLine = null;
+  }
 
-  public FastaScanner(Scanner scanner) {
-    this.scanner = scanner;
-    scanner.useDelimiter("\\n");
-    this.closed = false;
+  private String readLine() {
+    if (nextLine == null) {
+      try {
+        return reader.readLine();
+      } catch (IOException e) {
+        return null;
+      }
+    } else {
+      String result = nextLine;
+      nextLine = null;
+      return result;
+    }
+  }
+
+  private String peekLine() {
+    if (nextLine == null) {
+      try {
+        nextLine = reader.readLine();
+      } catch (IOException e) {
+        return null;
+      }
+    }
+    return nextLine;
   }
 
   @Override
   public boolean hasNext() {
-    if (! scanner.hasNext()) {
-      scanner.close();
-      closed = true;
-      return false;
-    }
-    return true;
+    return (peekLine() != null);
   }
 
   @Override
   public NamedSequence next() {
-    if (scanner.hasNext(">.*")) {
-      scanner.skip(">");
-    } else {
-      throw new RuntimeException("Wrong formatting of FASTA file");
+    if (!peekLine().startsWith(">")) {
+      throw new IllegalStateException("FASTA header should start with `>` mark");
     }
-    String name = scanner.nextLine().trim();
-    StringBuilder sequence = new StringBuilder();
-
-    while (scanner.hasNextLine() && !scanner.hasNext(">.*")) {
-      sequence.append(scanner.nextLine().trim());
+    String name = readLine().substring(1);
+    StringBuilder sequenceBuilder = new StringBuilder();
+    while (peekLine() != null && ! peekLine().startsWith(">")) {
+      sequenceBuilder.append(readLine());
     }
-
-    if (! scanner.hasNext()) {
-      closed = true;
-    }
-
-    return new NamedSequence(sequence.toString(), name);
+    return new NamedSequence(sequenceBuilder.toString(), name);
   }
 
   @Override
