@@ -30,18 +30,18 @@ public class FastaScanner implements Iterator<NamedSequence> {
     } else {
       throw new RuntimeException("Wrong formatting of FASTA file");
     }
-    String name = scanner.nextLine().trim();
-    StringBuilder sequence = new StringBuilder();
+    String name = scanner.nextLine();
+    StringBuilder sequenceBuilder = new StringBuilder();
 
     while (scanner.hasNextLine() && !scanner.hasNext(">.*")) {
-      sequence.append(scanner.nextLine().trim());
+      sequenceBuilder.append(scanner.nextLine());
     }
 
     if (! scanner.hasNext()) {
       closed = true;
     }
 
-    return new NamedSequence(sequence.toString(), name);
+    return new NamedSequence(sequenceBuilder.toString(), name);
   }
 
   @Override

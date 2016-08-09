@@ -42,7 +42,7 @@ public class SARUS {
       pwm = PWM.makeDummy(pwm.length());
     }
 
-    for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {
+    for (NamedSequence namedSequence: FastaReader_2.fromFile(fasta_filename)) {
       if (!suppressNames) {
         System.out.println(">" + namedSequence.getName());
       }
