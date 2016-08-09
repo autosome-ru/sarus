@@ -1,8 +1,10 @@
-package ru.autosome;
+package ru.autosome.motifModel;
+
+import ru.autosome.sequenceModel.Sequence;
 
 public abstract class PWM {
 
-  double[][] matrix;
+  public double[][] matrix;
 
   public PWM(double[][] matrix) {
     this.matrix = matrix;

@@ -1,4 +1,9 @@
-package ru.autosome;
+package ru.autosome.motifModel.mono;
+
+import ru.autosome.Assistant;
+import ru.autosome.motifModel.PWM;
+import ru.autosome.sequenceModel.mono.MSequence;
+import ru.autosome.sequenceModel.Sequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +17,7 @@ import java.util.ArrayList;
  */
 public class MPWM extends PWM {
 
-  static boolean lengthOfMPWMIsEven;
+  public static boolean lengthOfMPWMIsEven;
 
   MPWM(double[][] matrix) {
     super(matrix);
@@ -35,7 +40,7 @@ public class MPWM extends PWM {
     return score;
   }
 
-  static MPWM readMPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
+  public static MPWM readMPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
 
     ArrayList<String> strings = Assistant.load(path);
     ArrayList<Double[]> parsed = Assistant.parseMono(strings, transpose);

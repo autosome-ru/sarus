@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class Assistant {
-  static byte charToByte(char ch) {
+  public static byte charToByte(char ch) {
     switch (Character.toLowerCase(ch)) {
       case 'a':
         return 0;
@@ -34,7 +34,7 @@ public class Assistant {
     }
   }
 
-  static ArrayList<String> load(String path) throws IOException {
+  public static ArrayList<String> load(String path) throws IOException {
 
     ArrayList<String> strings = new ArrayList<String>();
     String tempLine;
@@ -54,7 +54,7 @@ public class Assistant {
     return strings;
   }
 
-  static int[] dComplimentaryElements;
+  public static int[] dComplimentaryElements;
 
   static {
     int ind = 0;
@@ -71,7 +71,7 @@ public class Assistant {
   }
 
 
-  static int[] sdComplimentaryElements;
+  public static int[] sdComplimentaryElements;
 
   static {
     int ind = 0;

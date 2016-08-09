@@ -1,4 +1,8 @@
-package ru.autosome;
+package ru.autosome.sequenceModel.di;
+
+import ru.autosome.Assistant;
+import ru.autosome.motifModel.PWM;
+import ru.autosome.sequenceModel.Sequence;
 
 /**
  * Created with IntelliJ IDEA.

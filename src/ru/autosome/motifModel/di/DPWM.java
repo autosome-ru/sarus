@@ -1,4 +1,9 @@
-package ru.autosome;
+package ru.autosome.motifModel.di;
+
+import ru.autosome.Assistant;
+import ru.autosome.motifModel.PWM;
+import ru.autosome.sequenceModel.di.DSequence;
+import ru.autosome.sequenceModel.Sequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +17,7 @@ import java.util.ArrayList;
  */
 public class DPWM extends PWM {
 
-  static boolean lengthOfDPWMIsEven;
+  public static boolean lengthOfDPWMIsEven;
 
   DPWM(double[][] matrix) {
     super(matrix);

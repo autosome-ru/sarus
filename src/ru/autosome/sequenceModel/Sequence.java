@@ -1,6 +1,8 @@
-package ru.autosome;
+package ru.autosome.sequenceModel;
 
 // import java.text.DecimalFormat;
+
+import ru.autosome.motifModel.PWM;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,9 +13,9 @@ package ru.autosome;
  */
 public abstract class Sequence {
 
-  byte[] sequence;
+  public byte[] sequence;
 
-  Sequence(byte[] sequence) {
+  public Sequence(byte[] sequence) {
     this.sequence = sequence;
   }
 
@@ -21,7 +23,7 @@ public abstract class Sequence {
 
   public abstract void bestHit(PWM pwm, PWM revComp_pwm);
 
-  void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
+  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
 
     double score1, score2;
 
@@ -51,7 +53,7 @@ public abstract class Sequence {
 
   }
 
-  void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
+  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
 
     double best_score = Double.NEGATIVE_INFINITY;
 

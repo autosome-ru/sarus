@@ -1,4 +1,8 @@
-package ru.autosome;
+package ru.autosome.motifModel.di;
+
+import ru.autosome.Assistant;
+import ru.autosome.sequenceModel.di.SDSequence;
+import ru.autosome.sequenceModel.Sequence;
 
 import java.io.IOException;
 

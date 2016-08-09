@@ -1,6 +1,10 @@
-package ru.autosome;
+package ru.autosome.sequenceModel.mono;
 
 // import java.text.DecimalFormat;
+
+import ru.autosome.Assistant;
+import ru.autosome.motifModel.PWM;
+import ru.autosome.sequenceModel.Sequence;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +19,7 @@ public class MSequence extends Sequence {
     super(sequence);
   }
 
-  static MSequence sequenceFromString(String str) {
+  public static MSequence sequenceFromString(String str) {
 
     int length = str.length();
 

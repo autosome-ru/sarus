@@ -1,9 +1,15 @@
 package ru.autosome.di;
 
-import ru.autosome.*;
+import ru.autosome.FastaReader;
+import ru.autosome.NamedSequence;
+import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.di.DPWM;
+import ru.autosome.motifModel.di.SDPWM;
+import ru.autosome.sequenceModel.Sequence;
+import ru.autosome.sequenceModel.di.DSequence;
+import ru.autosome.sequenceModel.di.SDSequence;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SARUS {

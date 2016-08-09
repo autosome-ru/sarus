@@ -1,7 +1,13 @@
 package ru.autosome;
 
+import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.mono.MPWM;
+import ru.autosome.motifModel.mono.SMPWM;
+import ru.autosome.sequenceModel.Sequence;
+import ru.autosome.sequenceModel.mono.MSequence;
+import ru.autosome.sequenceModel.mono.SMSequence;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SARUS {
