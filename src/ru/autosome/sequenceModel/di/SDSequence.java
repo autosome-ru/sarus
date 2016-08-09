@@ -46,9 +46,9 @@ public class SDSequence extends Sequence {
     //  throw new RuntimeException();
 
     if (DPWM.lengthOfDPWMIsEven) {
-      internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 1, 0, 0, -1);
+      internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1);
     } else {
-      internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 2, 0, -1, -1);
+      internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1);
 
     }
   }
@@ -59,9 +59,9 @@ public class SDSequence extends Sequence {
     //  throw new RuntimeException();
 
     if (DPWM.lengthOfDPWMIsEven) {
-      internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 1, 0, 0, -1);
+      internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1);
     } else {
-      internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 2, 0, -1, -1);
+      internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1);
 
     }
   }

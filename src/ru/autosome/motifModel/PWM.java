@@ -4,7 +4,7 @@ import ru.autosome.sequenceModel.Sequence;
 
 public abstract class PWM {
 
-  public double[][] matrix;
+  public final double[][] matrix;
 
   public PWM(double[][] matrix) {
     this.matrix = matrix;

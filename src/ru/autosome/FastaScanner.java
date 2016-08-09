@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class FastaScanner implements Iterator<NamedSequence> {
   private String nextLine;
-  BufferedReader reader;
+  final BufferedReader reader;
   FastaScanner(BufferedReader reader) {
     this.reader = reader;
     this.nextLine = null;
@@ -44,12 +44,15 @@ public class FastaScanner implements Iterator<NamedSequence> {
 
   @Override
   public NamedSequence next() {
-    if (!peekLine().startsWith(">")) {
+    String lineOnPeek = peekLine();
+    if (lineOnPeek == null || !lineOnPeek.startsWith(">")) {
       throw new IllegalStateException("FASTA header should start with `>` mark");
     }
-    String name = readLine().substring(1);
+
+    String header = readLine();
+    String name = header.substring(1);
     StringBuilder sequenceBuilder = new StringBuilder();
-    while (peekLine() != null && ! peekLine().startsWith(">")) {
+    while (peekLine() != null && !peekLine().startsWith(">")) {
       sequenceBuilder.append(readLine());
     }
     return new NamedSequence(sequenceBuilder.toString(), name);

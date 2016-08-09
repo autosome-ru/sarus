@@ -18,11 +18,6 @@ public class NamedSequence {
 
   @Override
   public String toString() {
-    StringBuilder builder = new StringBuilder();
-    builder.append(">");
-    builder.append(name);
-    builder.append("\n");
-    builder.append(sequence);
-    return builder.toString();
+    return ">" + name + "\n" + sequence;
   }
 }

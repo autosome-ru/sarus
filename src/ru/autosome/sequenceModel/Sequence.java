@@ -13,7 +13,7 @@ import ru.autosome.motifModel.PWM;
  */
 public abstract class Sequence {
 
-  public byte[] sequence;
+  public final byte[] sequence;
 
   public Sequence(byte[] sequence) {
     this.sequence = sequence;
@@ -23,7 +23,7 @@ public abstract class Sequence {
 
   public abstract void bestHit(PWM pwm, PWM revComp_pwm);
 
-  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
+  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint) {
 
     double score1, score2;
 
@@ -31,7 +31,7 @@ public abstract class Sequence {
     // DecimalFormat df = new DecimalFormat("#.##");
     for (int i = startIndex; i < endIndex; i++) {
 
-      score1 = pwm.score(this, i + shiftForScoreInPWM);
+      score1 = pwm.score(this, i);
       if (score1 >= threshold) {
 
         b.append(score1).append("\t").append(i + shiftForPrint).append("\t").append("+");
@@ -53,7 +53,7 @@ public abstract class Sequence {
 
   }
 
-  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInPWM, int shiftForScoreInRevCompPWM, int shiftForPrint) {
+  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint) {
 
     double best_score = Double.NEGATIVE_INFINITY;
 
@@ -62,7 +62,7 @@ public abstract class Sequence {
 
     for (int i = startIndex; i < endIndex; i++) {
 
-      double score1 = pwm.score(this, i + shiftForScoreInPWM);
+      double score1 = pwm.score(this, i);
       if (score1 >= best_score) {
         best_score = score1;
         DNAseq = "+";
@@ -79,11 +79,9 @@ public abstract class Sequence {
     }
 
 
-    StringBuilder b = new StringBuilder();
     // DecimalFormat df = new DecimalFormat("#.##");
 
-    b.append(best_score).append("\t").append(index + shiftForPrint).append("\t").append(DNAseq);
-    System.out.println(b.toString());
+    System.out.println(String.valueOf(best_score) + "\t" + (index + shiftForPrint) + "\t" + DNAseq);
 
   }
 }

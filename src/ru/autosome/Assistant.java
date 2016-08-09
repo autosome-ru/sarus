@@ -54,16 +54,16 @@ public class Assistant {
     return strings;
   }
 
-  public static int[] dComplimentaryElements;
+  public static final int[] dComplimentaryElements;
 
   static {
     int ind = 0;
     String[] letters = {"a", "c", "g", "t", "n"};
     List<String> rev_letters = Arrays.asList("t", "g", "c", "a", "n");
     dComplimentaryElements = new int[25];
-    for (int i = 0; i < letters.length; i++) {
-      for (int j = 0; j < letters.length; j++) {
-        int val = 5 * rev_letters.indexOf(letters[j]) + rev_letters.indexOf(letters[i]);
+    for (String letter_1 : letters) {
+      for (String letter_2 : letters) {
+        int val = 5 * rev_letters.indexOf(letter_2) + rev_letters.indexOf(letter_1);
         dComplimentaryElements[ind] = val;
         ind += 1;
       }
@@ -71,17 +71,17 @@ public class Assistant {
   }
 
 
-  public static int[] sdComplimentaryElements;
+  public static final int[] sdComplimentaryElements;
 
   static {
     int ind = 0;
     String[] letters = {"a", "c", "g", "t", "n"};
     List<String> rev_letters = Arrays.asList("t", "g", "c", "a", "n");
     sdComplimentaryElements = new int[125];
-    for (int i = 0; i < letters.length; i++) {
-      for (int j = 0; j < letters.length; j++) {
-        for (int k = 0; k < letters.length; k++) {
-          int val = 25 * rev_letters.indexOf(letters[k]) + 5 * rev_letters.indexOf(letters[j]) + rev_letters.indexOf(letters[i]);
+    for (String letter_1 : letters) {
+      for (String letter_2 : letters) {
+        for (String letter_3 : letters) {
+          int val = 25 * rev_letters.indexOf(letter_3) + 5 * rev_letters.indexOf(letter_2) + rev_letters.indexOf(letter_1);
           sdComplimentaryElements[ind] = val;
           ind += 1;
         }

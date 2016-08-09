@@ -34,7 +34,7 @@ public class DSequence extends Sequence {
     //if (pwm.getClass() != DPWM.class || revComp_pwm.getClass() != DPWM.class)
     //  throw new RuntimeException();
 
-    internalScan(pwm, revComp_pwm, threshold, 0, this.sequence.length - pwm.length() + 1, 0, 0, 0);
+    internalScan(pwm, revComp_pwm, threshold, 0, this.sequence.length - pwm.length() + 1, 0, 0);
 
   }
 
@@ -43,7 +43,7 @@ public class DSequence extends Sequence {
     //if (pwm.getClass() != DPWM.class || revComp_pwm.getClass() != DPWM.class)
     //  throw new RuntimeException();
 
-    internalBestHit(pwm, revComp_pwm, 0, this.sequence.length - pwm.length() + 1, 0, 0, 0);
+    internalBestHit(pwm, revComp_pwm, 0, this.sequence.length - pwm.length() + 1, 0, 0);
 
   }
 }
