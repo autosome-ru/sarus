@@ -9,6 +9,7 @@ import ru.autosome.sequenceModel.mono.SMSequence;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class SARUS {
 
@@ -20,12 +21,13 @@ public class SARUS {
       System.exit(1);
     }
 
-    boolean N_isPermitted = !(Arrays.asList(args).contains("skipn") || Arrays.asList(args).contains("nskip"));
-    boolean suppressNames = Arrays.asList(args).contains("suppress");
-    boolean transpose = Arrays.asList(args).contains("transpose");
-    boolean naive = Arrays.asList(args).contains("naive");
-    boolean only_direct = (Arrays.asList(args).contains("direct") || Arrays.asList(args).contains("forward"));
-    boolean only_revcomp = (Arrays.asList(args).contains("revcomp") || Arrays.asList(args).contains("reverse"));
+    List<String> argsList = Arrays.asList(args);
+    boolean N_isPermitted = !(argsList.contains("skipn") || argsList.contains("nskip"));
+    boolean suppressNames = argsList.contains("suppress");
+    boolean transpose = argsList.contains("transpose");
+    boolean naive = argsList.contains("naive");
+    boolean only_direct = (argsList.contains("direct") || argsList.contains("forward"));
+    boolean only_revcomp = (argsList.contains("revcomp") || argsList.contains("reverse"));
 
     String fasta_filename = args[0];
     String pwm_filename = args[1];
