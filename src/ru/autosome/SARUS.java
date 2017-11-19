@@ -101,9 +101,9 @@ public class SARUS {
     if (only_direct && only_revcomp) {
       throw new IllegalArgumentException("Only-direct and only-revcomp modes are specified simultaneously");
     } else if (only_direct) {
-      revcomp_pwm = PWM.makeDummy(revcomp_pwm.length());
+      revcomp_pwm = PWM.makeDummy(revcomp_pwm.matrix_length());
     } else if (only_revcomp) {
-      pwm = PWM.makeDummy(pwm.length());
+      pwm = PWM.makeDummy(pwm.matrix_length());
     }
 
     for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {

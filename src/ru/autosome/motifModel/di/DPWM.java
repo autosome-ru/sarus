@@ -95,4 +95,9 @@ public class DPWM extends PWM {
 
     return new DPWM(new_matrix);
   }
+
+  @Override
+  public int motif_length() {
+    return this.matrix.length + 1;
+  }
 }

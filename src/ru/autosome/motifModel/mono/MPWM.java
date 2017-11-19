@@ -87,4 +87,9 @@ public class MPWM extends PWM {
 
   }
 
+  @Override
+  public int motif_length() {
+    return this.matrix.length;
+  }
+
 }

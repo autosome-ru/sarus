@@ -14,9 +14,10 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class SMPWM extends MPWM {
-
-    SMPWM(double[][] matrix){
+    private final int motifLength;
+    SMPWM(double[][] matrix, int motifLength){
         super(matrix);
+        this.motifLength = motifLength;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class SMPWM extends MPWM {
     public static SMPWM readSMPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
 
         double[][] sup_matrix;
-
-        double[][] matrix = MPWM.readMPWM(path, N_isPermitted, transpose).matrix;
+        MPWM original_mwpwm = MPWM.readMPWM(path, N_isPermitted, transpose);
+        double[][] matrix = original_mwpwm.matrix;
 
         if (MPWM.lengthOfMPWMIsEven) {
 
@@ -56,7 +57,7 @@ public class SMPWM extends MPWM {
             makeSMMatrixFromMMatrix(temp_matrix, sup_matrix);
         }
 
-        return new SMPWM(sup_matrix);
+        return new SMPWM(sup_matrix, original_mwpwm.motif_length());
     }
 
     static void makeSMMatrixFromMMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -88,7 +89,11 @@ public class SMPWM extends MPWM {
             }
         }
 
-        return new SMPWM(new_matrix);
+        return new SMPWM(new_matrix, motifLength);
     }
 
+    @Override
+    public int motif_length() {
+        return motifLength;
+    }
 }

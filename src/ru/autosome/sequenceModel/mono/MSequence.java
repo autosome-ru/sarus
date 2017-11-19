@@ -40,7 +40,7 @@ public class MSequence extends Sequence {
     //if (pwm.getClass() != MPWM.class || revComp_pwm.getClass() != MPWM.class)
     //  throw new RuntimeException();
 
-    internalScan(pwm, revComp_pwm,threshold, 0, this.sequence.length-pwm.length() + 1, 0, 0, formatter);
+    internalScan(pwm, revComp_pwm,threshold, 0, this.sequence.length-pwm.matrix_length() + 1, 0, 0, formatter);
   }
 
   @Override
@@ -48,7 +48,7 @@ public class MSequence extends Sequence {
     //if (pwm.getClass() != MPWM.class || revComp_pwm.getClass() != MPWM.class)
     //throw new RuntimeException();
 
-    internalBestHit(pwm, revComp_pwm, 0, this.sequence.length - pwm.length() + 1, 0, 0, formatter);
+    internalBestHit(pwm, revComp_pwm, 0, this.sequence.length - pwm.matrix_length() + 1, 0, 0, formatter);
   }
 
 }

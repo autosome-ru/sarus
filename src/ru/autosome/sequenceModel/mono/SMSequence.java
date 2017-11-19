@@ -48,9 +48,9 @@ public class SMSequence extends Sequence {
         //    throw new RuntimeException();
 
         if(SMPWM.lengthOfMPWMIsEven){
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1, formatter);
+            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
         }  else {
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1, formatter);
+            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
         }
     }
 
@@ -60,9 +60,9 @@ public class SMSequence extends Sequence {
         //    throw new RuntimeException();
 
         if (MPWM.lengthOfMPWMIsEven) {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1, formatter);
+            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
         } else {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1, formatter);
+            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
         }
     }
 }

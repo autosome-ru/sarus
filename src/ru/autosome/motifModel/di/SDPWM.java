@@ -15,8 +15,10 @@ import java.io.IOException;
  */
 public class SDPWM extends DPWM {
 
-  SDPWM(double[][] matrix) {
+  private final int motifLength;
+  SDPWM(double[][] matrix, int motifLength) {
     super(matrix);
+    this.motifLength = motifLength;
   }
 
   @Override
@@ -39,8 +41,8 @@ public class SDPWM extends DPWM {
   public static SDPWM readSDPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
 
     double[][] sup_matrix;
-
-    double[][] matrix = DPWM.readDPWM(path, N_isPermitted, transpose).matrix;
+    DPWM original_dpwm = DPWM.readDPWM(path, N_isPermitted, transpose);
+    double[][] matrix = original_dpwm.matrix;
 
     if (DPWM.lengthOfDPWMIsEven) {
 
@@ -58,7 +60,7 @@ public class SDPWM extends DPWM {
       makeSDMatrixFromDMatrix(temp_matrix, sup_matrix);
     }
 
-    return new SDPWM(sup_matrix);
+    return new SDPWM(sup_matrix, original_dpwm.motif_length());
   }
 
   static void makeSDMatrixFromDMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -94,6 +96,11 @@ public class SDPWM extends DPWM {
       }
     }
 
-    return new SDPWM(new_matrix);
+    return new SDPWM(new_matrix, motifLength);
+  }
+
+  @Override
+  public int motif_length() {
+    return motifLength;
   }
 }

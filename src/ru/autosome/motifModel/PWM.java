@@ -14,9 +14,11 @@ public abstract class PWM {
 
   public abstract PWM revcomp();
 
-  public int length() {
+  public int matrix_length() {
     return matrix.length;
   }
+
+  abstract public int motif_length(); // length of matched sequence in nucleotides
 
   public static PWM makeDummy(int length) {
     return new Dummy(length);
@@ -26,6 +28,11 @@ public abstract class PWM {
 
     public Dummy(int length) {
       super(new double[length][]);
+    }
+
+    @Override
+    public int motif_length() {
+      throw new RuntimeException("cannot return motif length of the Dummy PWM");
     }
 
     @Override
