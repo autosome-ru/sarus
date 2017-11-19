@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// List of pvalue-threshold pairs sorted by threshold ascending
 public class PvalueBsearchList {
   private final List<ThresholdPvaluePair> list;
 
@@ -24,6 +25,10 @@ public class PvalueBsearchList {
     return Math.sqrt(pvalue_1 * pvalue_2);
   }
 
+  public double combine_thresholds(double threshold_1, double threshold_2) {
+    return (threshold_1 + threshold_2) / 2;
+  }
+
   public double pvalue_by_threshold(double threshold) {
     int index = Collections.binarySearch(list, new ThresholdPvaluePair(threshold, null), ThresholdPvaluePair.thresholdComparator);
     if (index >= 0) {
@@ -32,12 +37,32 @@ public class PvalueBsearchList {
 
     int insertion_point = -index - 1;
     if (insertion_point > 0 && insertion_point < list.size()) {
-      return combine_pvalues(list.get(insertion_point).pvalue,
-          list.get(insertion_point - 1).pvalue);
+      return combine_pvalues(
+          list.get(insertion_point).pvalue,
+          list.get(insertion_point - 1).pvalue
+      );
     } else if (insertion_point == 0) {
       return list.get(0).pvalue;
     } else {
       return list.get(list.size() - 1).pvalue;
+    }
+  }
+
+  public double threshold_by_pvalue(double pvalue) {
+    int index = Collections.binarySearch(list, new ThresholdPvaluePair(null, pvalue), ThresholdPvaluePair.pvalueComparator);
+    if (index >= 0) {
+      return list.get(index).threshold;
+    }
+    int insertion_point = -index - 1;
+    if (insertion_point > 0 && insertion_point < list.size()) {
+      return combine_thresholds(
+          list.get(insertion_point).threshold,
+          list.get(insertion_point - 1).threshold
+      );
+    } else if (insertion_point == 0) {
+      return list.get(0).threshold;
+    } else {
+      return list.get(list.size() - 1).threshold;
     }
   }
 
