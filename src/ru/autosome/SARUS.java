@@ -28,6 +28,7 @@ public class SARUS {
     boolean naive = argsList.contains("naive");
     boolean only_direct = (argsList.contains("direct") || argsList.contains("forward"));
     boolean only_revcomp = (argsList.contains("revcomp") || argsList.contains("reverse"));
+    ResultFormatter formatter = new ResultFormatter();
 
     String fasta_filename = args[0];
     String pwm_filename = args[1];
@@ -62,10 +63,10 @@ public class SARUS {
       }
 
       if (args[2].matches("besthit")) {
-        seq.bestHit(pwm, revcomp_pwm);
+        seq.bestHit(pwm, revcomp_pwm, formatter);
       } else {
         double threshold = Double.parseDouble(args[2]);
-        seq.scan(pwm, revcomp_pwm, threshold);
+        seq.scan(pwm, revcomp_pwm, threshold, formatter);
       }
     }
   }

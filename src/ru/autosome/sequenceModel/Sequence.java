@@ -2,6 +2,7 @@ package ru.autosome.sequenceModel;
 
 // import java.text.DecimalFormat;
 
+import ru.autosome.ResultFormatter;
 import ru.autosome.motifModel.PWM;
 
 /**
@@ -19,69 +20,49 @@ public abstract class Sequence {
     this.sequence = sequence;
   }
 
-  public abstract void scan(PWM pwm, PWM revComp_pwm, double threshold);
+  public abstract void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter);
 
-  public abstract void bestHit(PWM pwm, PWM revComp_pwm);
+  public abstract void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter);
 
-  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint) {
-
+  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
     double score1, score2;
-
-    StringBuilder b = new StringBuilder();
-    // DecimalFormat df = new DecimalFormat("#.##");
     for (int i = startIndex; i < endIndex; i++) {
-
       score1 = pwm.score(this, i);
       if (score1 >= threshold) {
-
-        b.append(score1).append("\t").append(i + shiftForPrint).append("\t").append("+");
-        System.out.println(b.toString());
-        b.setLength(0);
-
+        String occurence_info = formatter.format(score1, i + shiftForPrint, "+");
+        System.out.println(occurence_info);
       }
 
       score2 = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
       if (score2 >= threshold) {
-
-        b.append(score2).append("\t").append(i + shiftForPrint).append("\t").append("-");
-        System.out.println(b.toString());
-        b.setLength(0);
-
+        String occurence_info = formatter.format(score2, i + shiftForPrint, "-");
+        System.out.println(occurence_info);
       }
-
     }
-
   }
 
-  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint) {
-
+  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
     double best_score = Double.NEGATIVE_INFINITY;
-
     String DNAseq = "+";
     int index = 0;
 
     for (int i = startIndex; i < endIndex; i++) {
-
-      double score1 = pwm.score(this, i);
-      if (score1 >= best_score) {
-        best_score = score1;
+      double score_direct = pwm.score(this, i);
+      if (score_direct >= best_score) {
+        best_score = score_direct;
         DNAseq = "+";
         index = i;
       }
 
-      score1 = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
-      if (score1 >= best_score) {
-        best_score = score1;
+      double score_revcomp = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
+      if (score_revcomp >= best_score) {
+        best_score = score_revcomp;
         DNAseq = "-";
         index = i;
       }
-
     }
 
-
-    // DecimalFormat df = new DecimalFormat("#.##");
-
-    System.out.println(String.valueOf(best_score) + "\t" + (index + shiftForPrint) + "\t" + DNAseq);
-
+    String occurence_info = formatter.format(best_score, index + shiftForPrint, DNAseq);
+    System.out.println(occurence_info);
   }
 }

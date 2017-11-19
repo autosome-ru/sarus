@@ -1,6 +1,7 @@
 package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
+import ru.autosome.ResultFormatter;
 import ru.autosome.motifModel.mono.MPWM;
 import ru.autosome.motifModel.PWM;
 import ru.autosome.motifModel.mono.SMPWM;
@@ -42,28 +43,26 @@ public class SMSequence extends Sequence {
     }
 
     @Override
-    public void scan(PWM pwm, PWM revComp_pwm, double threshold){
+    public void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter){
         // if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
         if(SMPWM.lengthOfMPWMIsEven){
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1);
+            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1, formatter);
         }  else {
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1);
+            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1, formatter);
         }
-
     }
 
     @Override
-    public void bestHit(PWM pwm, PWM revComp_pwm) {
+    public void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter) {
         //if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
         if (MPWM.lengthOfMPWMIsEven) {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1);
+            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 1, 0, -1, formatter);
         } else {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1);
-
+            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.length() + 2, -1, -1, formatter);
         }
     }
 }
