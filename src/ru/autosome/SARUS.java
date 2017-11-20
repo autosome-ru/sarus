@@ -21,9 +21,8 @@ public class SARUS {
         "SPRY-SARUS command line: <sequences.multifasta> <weight.matrix> <threshold>|besthit [suppress] [direct] [revcomp] [skipn] [transpose]\n" +
             "Options:\n" +
             "  [--pvalues-file FILE] - specify PWM score <--> P-value conversion\n" +
-            "  [--output-pvalues] - output P-values instead of scores\n" +
-            "  [--pvalue-as-threshold] - threshold specified for P-value, not for score\n" +
-            "  [--use-log-scale] - convert P-values into -log10 scale (both for input and output)\n" +
+            "  [--output-scoring-mode MODE] - output score/pvalue/logpvalue (default: score). logpvalue := -log10(P-value)\n" +
+            "  [--threshold-mode MODE] - threshold specified for score/pvalue/logpvalue (default: score). logpvalue := -log10(P-value)\n" +
             "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
             "  [--output-bed] - format output results in BED-6. FASTA headers should be like chr1:23 (or chr1:23-45 or chr1:23..45,+)\n" +
             "  [--motif-name] - motif name goes in 4-th column in BED-6 format. By default is inferred from PWM filename\n";
@@ -46,44 +45,40 @@ public class SARUS {
     boolean only_direct = (argsList.contains("direct") || argsList.contains("forward"));
     boolean only_revcomp = (argsList.contains("revcomp") || argsList.contains("reverse"));
 
-    PvalueBsearchList pvalueBsearchList = null; // scores --> Pvalues
-    boolean outputPvalues = false; // output scores as Pvalues (or logPvalues)
-    boolean pvalueAsThreshold = false; // measure specified threshold in Pvalue (or logPvalue)
-    boolean useLogScale = false; // output Pvalues into -log10 scale
+    PvalueBsearchList pvalueBsearchList = null; // scores <--> Pvalues mapping
+    ScoreType outputScoringModel = ScoreType.SCORE; // output site strength as score, pvalue or logpvalue
+    ScoreType inputScoringModel = ScoreType.SCORE; // site strength threshold as score, pvalue or logpvalue
+
     Integer precision = null; // round scores (or P-values) in output
 
     boolean outputAsBed = false;
     String motifName;
+
+    if (argsList.contains("--output-scoring-mode")) {
+      int arg_index = argsList.indexOf("--output-scoring-mode");
+      outputScoringModel = ScoreType.valueOf( argsList.get(arg_index + 1).toUpperCase() );
+    }
+
+    if (argsList.contains("--threshold-mode")) {
+      int arg_index = argsList.indexOf("--threshold-mode");
+      inputScoringModel = ScoreType.valueOf( argsList.get(arg_index + 1).toUpperCase() );
+    }
+
 
     if (argsList.contains("--pvalues-file")) {
       int arg_index = argsList.indexOf("--pvalues-file");
       String threshold_pvalues_filename = argsList.get(arg_index + 1);
       File threshold_pvalues_file = new File(threshold_pvalues_filename);
       pvalueBsearchList = PvalueBsearchList.load_from_file(threshold_pvalues_file);
+    }
 
-      if (argsList.contains("--output-pvalues")) {
-        outputPvalues = true;
-      }
-
-      if (argsList.contains("--pvalue-as-threshold")) {
-        pvalueAsThreshold = true;
-      }
-
-      if (argsList.contains("--use-log-scale")) {
-        useLogScale = true;
-      }
-
-      if (!outputPvalues && !pvalueAsThreshold) {
-        System.err.println("Error! Score-pvalue conversion is specified but not used for neither output (`--output-pvalues`) nor input (`--pvalue-as-threshold`).");
-        System.exit(1);
-      }
-    } else { // score <--> pvalue conversion not specified
-      if (argsList.contains("--output-pvalues") || argsList.contains("--pvalue-as-threshold") || argsList.contains("--use-log-scale")) {
-        System.err.println("Error! Score <--> P-value conversion not specified but options using P-value are used.\n" +
-                               "If you want to use any one of `--output-pvalues` or `--pvalue-as-threshold` or `--use-log-scale`,\n" +
-                               "use also `--pvalues-file` option.");
-        System.exit(1);
-      }
+    if (pvalueBsearchList != null && outputScoringModel == ScoreType.SCORE && inputScoringModel == ScoreType.SCORE) {
+      System.err.println("Warning! Score-pvalue conversion is specified but not used for neither output scores nor threshold score.");
+    }
+    if (pvalueBsearchList == null && !(outputScoringModel == ScoreType.SCORE && inputScoringModel == ScoreType.SCORE)) {
+      System.err.println("Error! Score <--> P-value conversion not specified but P-value is used for output or threshold.\n" +
+                         "Use `--pvalues-file FILE` option.");
+      System.exit(1);
     }
 
     if (argsList.contains("--precision")) {
@@ -105,12 +100,7 @@ public class SARUS {
       }
     }
 
-    ScoreFormatter scoreFormatter;
-    if (outputPvalues) {
-      scoreFormatter = new ScoreFormatter(precision, pvalueBsearchList, useLogScale);
-    } else {
-      scoreFormatter = new ScoreFormatter(precision, null, false);
-    }
+    ScoreFormatter scoreFormatter = new ScoreFormatter(precision, outputScoringModel, pvalueBsearchList);
 
     PWM pwm, revcomp_pwm;
     if (naive) {
@@ -124,6 +114,7 @@ public class SARUS {
     if (!outputAsBed) {
       formatter = new SarusResultFormatter(scoreFormatter);
     } else {
+      // it is fictious formatter which is never used (it's overwritten at each new sequence)
       formatter = new BedResultFormatter(scoreFormatter, "chr", 0, motifName, pwm.motif_length());
     }
 
@@ -156,19 +147,7 @@ public class SARUS {
       if (args[2].matches("besthit")) {
         seq.bestHit(pwm, revcomp_pwm, formatter);
       } else {
-        double threshold;
-        if (pvalueAsThreshold) { // threshold for P-value not for score
-          double pvalue;
-          if (useLogScale) {
-            double logPvalue = Double.parseDouble(args[2]);
-            pvalue = Math.pow(10.0, -logPvalue);
-          } else {
-            pvalue = Double.parseDouble(args[2]);
-          }
-          threshold = pvalueBsearchList.threshold_by_pvalue(pvalue);
-        } else {
-          threshold = Double.parseDouble(args[2]);
-        }
+        double threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(args[2]), pvalueBsearchList);
         seq.scan(pwm, revcomp_pwm, threshold, formatter);
       }
     }
