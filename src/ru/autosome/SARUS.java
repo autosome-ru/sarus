@@ -24,7 +24,9 @@ public class SARUS {
             "  [--output-pvalues] - output P-values instead of scores\n" +
             "  [--pvalue-as-threshold] - threshold specified for P-value, not for score\n" +
             "  [--use-log-scale] - convert P-values into -log10 scale (both for input and output)\n" +
-            "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n";
+            "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
+            "  [--output-bed] - format output results in BED-6. FASTA headers should be like chr1:23 (or chr1:23-45 or chr1:23..45,+)\n" +
+            "  [--motif-name] - motif name goes in 4-th column in BED-6 format. By default is inferred from PWM filename\n";
     if (args.length < 3) {
       System.err.print(helpString);
       System.exit(1);
@@ -43,6 +45,9 @@ public class SARUS {
     boolean pvalueAsThreshold = false; // measure specified threshold in Pvalue (or logPvalue)
     boolean useLogScale = false; // output Pvalues into -log10 scale
     Integer precision = null; // round scores (or P-values) in output
+
+    boolean outputAsBed = false;
+    String motifName;
 
     if (argsList.contains("--pvalues-file")) {
       int arg_index = argsList.indexOf("--pvalues-file");
@@ -79,15 +84,26 @@ public class SARUS {
       int arg_index = argsList.indexOf("--precision");
       precision = Integer.valueOf(argsList.get(arg_index + 1));
     }
-    ResultFormatter formatter;
-    if (outputPvalues) {
-      formatter = new ResultFormatter(precision, pvalueBsearchList, useLogScale);
-    } else {
-      formatter = new ResultFormatter(precision, null, false);
-    }
 
     String fasta_filename = args[0];
     String pwm_filename = args[1];
+
+    motifName = utils.fileBasename(pwm_filename);
+
+    if (argsList.contains("--output-bed")) {
+      outputAsBed = true;
+      if (argsList.contains("--motif-name")) {
+        int arg_index = argsList.indexOf("--motif-name");
+        motifName = argsList.get(arg_index + 1);
+      }
+    }
+
+    ScoreFormatter scoreFormatter;
+    if (outputPvalues) {
+      scoreFormatter = new ScoreFormatter(precision, pvalueBsearchList, useLogScale);
+    } else {
+      scoreFormatter = new ScoreFormatter(precision, null, false);
+    }
 
     PWM pwm, revcomp_pwm;
     if (naive) {
@@ -96,6 +112,13 @@ public class SARUS {
       pwm = SMPWM.readSMPWM(pwm_filename, N_isPermitted, transpose);
     }
     revcomp_pwm = pwm.revcomp();
+
+    ResultFormatter formatter;
+    if (!outputAsBed) {
+      formatter = new SarusResultFormatter(scoreFormatter);
+    } else {
+      formatter = new BedResultFormatter(scoreFormatter, "chr", 0, motifName, pwm.motif_length());
+    }
 
     // replace with fake pwm if 1-strand search is used
     if (only_direct && only_revcomp) {
@@ -107,6 +130,11 @@ public class SARUS {
     }
 
     for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {
+      if (outputAsBed) {
+        utils.IntervalStartCoordinate intervalCoordinate = utils.IntervalStartCoordinate.fromIntervalNotation(namedSequence.getName());
+        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, motifName, pwm.motif_length());
+      }
+
       if (!suppressNames) {
         System.out.println(">" + namedSequence.getName());
       }

@@ -25,17 +25,17 @@ public abstract class Sequence {
   public abstract void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter);
 
   public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
-    double score1, score2;
+    double score_direct, score_revcomp;
     for (int i = startIndex; i < endIndex; i++) {
-      score1 = pwm.score(this, i);
-      if (score1 >= threshold) {
-        String occurence_info = formatter.format(score1, i + shiftForPrint, "+");
+      score_direct = pwm.score(this, i);
+      if (score_direct >= threshold) {
+        String occurence_info = formatter.format(score_direct, i + shiftForPrint, "+");
         System.out.println(occurence_info);
       }
 
-      score2 = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
-      if (score2 >= threshold) {
-        String occurence_info = formatter.format(score2, i + shiftForPrint, "-");
+      score_revcomp = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
+      if (score_revcomp >= threshold) {
+        String occurence_info = formatter.format(score_revcomp, i + shiftForPrint, "-");
         System.out.println(occurence_info);
       }
     }

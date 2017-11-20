@@ -2,8 +2,8 @@ package ru.autosome.sequenceModel.di;
 
 import ru.autosome.Assistant;
 import ru.autosome.ResultFormatter;
-import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.sequenceModel.Sequence;
 
 /**

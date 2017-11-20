@@ -2,8 +2,8 @@ package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
 import ru.autosome.ResultFormatter;
-import ru.autosome.motifModel.mono.MPWM;
 import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.mono.MPWM;
 import ru.autosome.motifModel.mono.SMPWM;
 import ru.autosome.sequenceModel.Sequence;
 

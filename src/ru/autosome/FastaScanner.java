@@ -50,7 +50,7 @@ public class FastaScanner implements Iterator<NamedSequence> {
     }
 
     String header = readLine();
-    String name = header.substring(1);
+    String name = header.substring(1).trim();
     StringBuilder sequenceBuilder = new StringBuilder();
     while (peekLine() != null && !peekLine().startsWith(">")) {
       sequenceBuilder.append(readLine());
