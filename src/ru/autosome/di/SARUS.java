@@ -28,12 +28,18 @@ public class SARUS {
             "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
             "  [--output-bed] - format output results in BED-6. FASTA headers should be like chr1:23 (or chr1:23-45 or chr1:23..45,+)\n" +
             "  [--motif-name] - motif name goes in 4-th column in BED-6 format. By default is inferred from PWM filename\n";
+
+    List<String> argsList = Arrays.asList(args);
+    if (argsList.contains("-h") || argsList.contains("--help")) {
+      System.err.print(helpString);
+      System.exit(0);
+    }
+
     if (args.length < 3) {
       System.err.print(helpString);
       System.exit(1);
     }
 
-    List<String> argsList = Arrays.asList(args);
     boolean N_isPermitted = !(argsList.contains("skipn") || argsList.contains("nskip"));
     boolean suppressNames = argsList.contains("suppress");
     boolean transpose = argsList.contains("transpose");
