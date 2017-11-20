@@ -98,6 +98,7 @@ public class SARUS {
 
     if (argsList.contains("--output-bed")) {
       outputAsBed = true;
+      suppressNames = true;
       if (argsList.contains("--motif-name")) {
         int arg_index = argsList.indexOf("--motif-name");
         motifName = argsList.get(arg_index + 1);
