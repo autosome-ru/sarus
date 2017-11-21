@@ -2,6 +2,7 @@ package ru.autosome.motifModel;
 
 import ru.autosome.sequenceModel.Sequence;
 
+//matrix: first string - name; row - position, column - nucleotide
 public abstract class PWM {
 
   public final double[][] matrix;
