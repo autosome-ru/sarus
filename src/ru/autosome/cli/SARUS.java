@@ -177,7 +177,8 @@ public abstract class SARUS {
       ResultFormatter formatter;
       if (outputAsBed) {
         utils.IntervalStartCoordinate intervalCoordinate = utils.IntervalStartCoordinate.fromIntervalNotation(namedSequence.getName());
-        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, motifName, pwm.motif_length());
+        String intervalName = motifName + ";" + namedSequence.getName().split("\\t")[0];
+        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length());
       } else {
         formatter = sarusFormatter;
       }
