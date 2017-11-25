@@ -57,21 +57,21 @@ public class DPWM extends PWM {
       int j;
       int a = 0;
       for (j = 0; j < 20; j++) {
-        if (((j + 1) % 5) != 0) {
+        if (((j + 1) % 5) != 0) { // [ACGT][ACGT]
           resultPWM[i][j] = line[a];// Double.parseDouble(line[a]);
           a += 1;
-        } else {
+        } else { // [ACGT]N
           if (N_isPermitted) {
-            resultPWM[i][j] = 0.0;
+            resultPWM[i][j] = (resultPWM[i][j - 4] + resultPWM[i][j - 3] + resultPWM[i][j - 2] + resultPWM[i][j - 1]) / 4;
           } else {
             resultPWM[i][j] = Double.NEGATIVE_INFINITY;
           }
         }
 
       }
-      for (j = 20; j < 25; j++) {
+      for (j = 20; j < 25; j++) { // N[ACGT] and NN
         if (N_isPermitted) {
-          resultPWM[i][j] = 0.0;
+          resultPWM[i][j] = (resultPWM[i][j % 5] + resultPWM[i][5 + j % 5] + resultPWM[i][10 + j % 5] + resultPWM[i][15 + j % 5]) / 4;
         } else {
           resultPWM[i][j] = Double.NEGATIVE_INFINITY;
         }

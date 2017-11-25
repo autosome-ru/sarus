@@ -60,7 +60,7 @@ public class MPWM extends PWM {
       }
 
       if (N_isPermitted) {
-        resultPWM[i][4] = 0.0;
+        resultPWM[i][4] = (resultPWM[i][0] + resultPWM[i][1] + resultPWM[i][2] + resultPWM[i][3]) / 4;
       } else {
         resultPWM[i][4] = Double.NEGATIVE_INFINITY;
       }
