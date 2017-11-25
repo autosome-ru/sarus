@@ -46,6 +46,13 @@ public abstract class Sequence {
     String DNAseq = "+";
     int index = 0;
 
+    if (startIndex >= endIndex) { // sequence is shorter than motif
+      if (formatter.shouldOutputNoMatch()) {
+        System.out.println(formatter.formatNoMatch());
+      }
+      return;
+    }
+
     for (int i = startIndex; i < endIndex; i++) {
       double score_direct = pwm.score(this, i);
       if (score_direct >= best_score) {

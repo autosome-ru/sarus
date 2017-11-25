@@ -24,6 +24,7 @@ public abstract class SARUS {
   protected Integer precision; // round scores (or P-values) in output
   protected boolean outputAsBed;
   protected String motifName;
+  protected boolean show_non_matching;
 
   protected String fasta_filename;
   protected String pwm_filename;
@@ -55,7 +56,8 @@ public abstract class SARUS {
         "  [--motif-name] - motif name goes in 4-th column in BED-6 format. By default is inferred from PWM filename\n" +
         "  [--skipn] - Skip words with N-nucleotides.\n" +
         "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
-        "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n";
+        "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
+        "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
   }
 
   abstract public PWM loadPWM() throws IOException;
@@ -81,6 +83,7 @@ public abstract class SARUS {
     this.precision = null; // round scores (or P-values) in output
     this.outputAsBed = false;
     this.motifName = null;
+    this.show_non_matching = false;
 
     if (argsList.contains("--output-scoring-mode")) {
       int arg_index = argsList.indexOf("--output-scoring-mode");
@@ -119,6 +122,10 @@ public abstract class SARUS {
 
     if (argsList.remove("--suppress")) {
       this.suppressNames = true;
+    }
+    if (argsList.remove("--show-non-matching")) {
+      this.show_non_matching = true;
+
     }
 
     if (argsList.remove("--output-bed")) {
@@ -171,14 +178,14 @@ public abstract class SARUS {
   }
 
   public void run() throws IOException {
-    ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter);
+    ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching);
 
     for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {
       ResultFormatter formatter;
       if (outputAsBed) {
         utils.IntervalStartCoordinate intervalCoordinate = utils.IntervalStartCoordinate.fromIntervalNotation(namedSequence.getName());
         String intervalName = motifName + ";" + namedSequence.getName().split("\\t")[0];
-        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length());
+        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length(), show_non_matching);
       } else {
         formatter = sarusFormatter;
       }
