@@ -36,11 +36,11 @@ public class SARUS extends ru.autosome.cli.SARUS {
   }
 
   @Override
-  public Sequence convertSequence(NamedSequence namedSequence) {
+  public Sequence convertSequence(String sequence) {
     if (naive) {
-      return DSequence.sequenceFromString(namedSequence.getSequence());
+      return DSequence.sequenceFromString(sequence);
     } else {
-      return SDSequence.sequenceFromString(namedSequence.getSequence());
+      return SDSequence.sequenceFromString(sequence);
     }
   }
 

@@ -3,9 +3,11 @@ package ru.autosome;
 public class SarusResultFormatter implements ResultFormatter {
   ScoreFormatter scoreFormatter;
   boolean outputNoMatch;
-  public SarusResultFormatter(ScoreFormatter scoreFormatter, boolean outputNoMatch) {
+  int flankLength;
+  public SarusResultFormatter(ScoreFormatter scoreFormatter, boolean outputNoMatch, int flankLength) {
     this.scoreFormatter = scoreFormatter;
     this.outputNoMatch = outputNoMatch;
+    this.flankLength = flankLength;
   }
 
   @Override
@@ -15,12 +17,16 @@ public class SarusResultFormatter implements ResultFormatter {
 
   @Override
   public String format(double score, int pos_start, String strand) {
-    return scoreFormatter.formatScore(score) + "\t" + pos_start + "\t" + strand;
-
+    return scoreFormatter.formatScore(score) + "\t" + (pos_start - getFlankLength()) + "\t" + strand;
   }
 
   @Override
   public String formatNoMatch() {
     return scoreFormatter.formatScore(Double.NEGATIVE_INFINITY) + "\t" + (-1) + "\t" + "+";
+  }
+
+  @Override
+  public int getFlankLength() {
+    return flankLength;
   }
 }

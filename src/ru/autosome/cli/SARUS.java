@@ -25,6 +25,7 @@ public abstract class SARUS {
   protected boolean outputAsBed;
   protected String motifName;
   protected boolean show_non_matching;
+  protected int flankLength;
 
   protected String fasta_filename;
   protected String pwm_filename;
@@ -57,11 +58,13 @@ public abstract class SARUS {
         "  [--skipn] - Skip words with N-nucleotides.\n" +
         "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
         "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
+        "  [--dont-add-flanks] - By default polyN-flanks are added to a sequence so that long motif could match short sequence.\n" +
+        "                        This option disables sequence expansion. Thus, there can be too short sequences with no besthit.\n" +
         "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
   }
 
   abstract public PWM loadPWM() throws IOException;
-  abstract public Sequence convertSequence(NamedSequence namedSequence);
+  abstract public Sequence convertSequence(String sequence);
 
   public void setupFromArglist(ArrayList<String> argsList) throws IOException {
     if (argsList.contains("-h") || argsList.contains("--help")) {
@@ -125,7 +128,6 @@ public abstract class SARUS {
     }
     if (argsList.remove("--show-non-matching")) {
       this.show_non_matching = true;
-
     }
 
     if (argsList.remove("--output-bed")) {
@@ -138,10 +140,15 @@ public abstract class SARUS {
       }
     }
 
+    boolean addFlanks = true;
+    if (argsList.remove("--dont-add-flanks")) {
+      addFlanks = false;
+    }
+
     if (argsList.size() != 3) {
       System.err.print(
           "Error: some arguments or parameters not recognized.\n" +
-              "Please check the following arguments (there must be 3 required arguments and some non-recognized options:\n");
+          "Please check the following arguments (there must be 3 required arguments and some non-recognized options:\n");
       List<String> requiredArgs = argsList.subList(0, (argsList.size() < 3) ? argsList.size() : 3);
       System.err.println("  Required (" + requiredArgs.size() + " of 3):");
       System.err.println(String.join("\n", requiredArgs.stream().map(arg -> "*\t" + arg).collect(Collectors.toList())));
@@ -153,6 +160,10 @@ public abstract class SARUS {
       System.err.println();
       System.err.print(helpString());
       System.exit(1);
+    }
+
+    if (addFlanks && show_non_matching) {
+      System.err.println("Warning! `--show-non-matching` does nothing when polyN-flanks are added. Take a look at `--dont-add-flanks` options.");
     }
 
     this.fasta_filename = argsList.get(0);
@@ -167,6 +178,12 @@ public abstract class SARUS {
     this.pwm = loadPWM();
     this.revcomp_pwm = pwm.revcomp();
 
+    if (addFlanks) {
+      this.flankLength = pwm.motif_length();
+    } else {
+      this.flankLength = 0;
+    }
+
     // replace with fake pwm if 1-strand search is used
     if (only_direct && only_revcomp) {
       throw new IllegalArgumentException("Only-direct and only-revcomp modes are specified simultaneously");
@@ -178,14 +195,15 @@ public abstract class SARUS {
   }
 
   public void run() throws IOException {
-    ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching);
+    ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching, flankLength);
+    String flank = utils.polyN_flank(flankLength);
 
     for (NamedSequence namedSequence: FastaReader.fromFile(fasta_filename)) {
       ResultFormatter formatter;
       if (outputAsBed) {
         utils.IntervalStartCoordinate intervalCoordinate = utils.IntervalStartCoordinate.fromIntervalNotation(namedSequence.getName());
         String intervalName = motifName + ";" + namedSequence.getName().split("\\t")[0];
-        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length(), show_non_matching);
+        formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length(), show_non_matching, flankLength);
       } else {
         formatter = sarusFormatter;
       }
@@ -194,7 +212,7 @@ public abstract class SARUS {
         System.out.println(">" + namedSequence.getName());
       }
 
-      Sequence seq = convertSequence(namedSequence);
+      Sequence seq = convertSequence(flank + namedSequence.getSequence() + flank);
 
       if (thresholdOrBesthit.matches("besthit")) {
         seq.bestHit(pwm, revcomp_pwm, formatter);

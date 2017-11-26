@@ -7,19 +7,21 @@ public class BedResultFormatter implements ResultFormatter {
   String motifName;
   int motifLength;
   boolean outputNoMatch;
-  public BedResultFormatter(ScoreFormatter scoreFormatter, String intervalChromosome, int intervalStartPos, String motifName, int motifLength, boolean outputNoMatch) {
+  int flankLength;
+  public BedResultFormatter(ScoreFormatter scoreFormatter, String intervalChromosome, int intervalStartPos, String motifName, int motifLength, boolean outputNoMatch, int flankLength) {
     this.scoreFormatter = scoreFormatter;
     this.intervalChromosome = intervalChromosome;
     this.intervalStartPos = intervalStartPos;
     this.motifName = motifName;
     this.motifLength = motifLength;
     this.outputNoMatch = outputNoMatch;
+    this.flankLength = flankLength;
   }
 
   @Override
   public String format(double score, int pos_start, String strand) {
-    int from = intervalStartPos + pos_start;
-    int to = intervalStartPos + pos_start + motifLength;
+    int from = intervalStartPos + pos_start - getFlankLength();
+    int to = intervalStartPos + pos_start + motifLength - getFlankLength();
     return intervalChromosome + "\t" + from + "\t" + to + "\t" + motifName + "\t" + scoreFormatter.formatScore(score) + "\t" + strand;
   }
 
@@ -33,5 +35,10 @@ public class BedResultFormatter implements ResultFormatter {
   @Override
   public boolean shouldOutputNoMatch() {
     return outputNoMatch;
+  }
+
+  @Override
+  public int getFlankLength() {
+    return flankLength;
   }
 }

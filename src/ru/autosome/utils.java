@@ -17,6 +17,14 @@ public class utils {
     }
   }
 
+  public static String polyN_flank(int flankLength) {
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < flankLength; ++i) {
+      builder.append("N");
+    }
+    return builder.toString();
+  }
+
   public static class IntervalStartCoordinate {
     public String chromosome;
     public int startPos;
