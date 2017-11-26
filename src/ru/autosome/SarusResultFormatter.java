@@ -22,6 +22,9 @@ public class SarusResultFormatter implements ResultFormatter {
 
   @Override
   public String formatNoMatch() {
+    if (!shouldOutputNoMatch()) {
+      throw new UnsupportedOperationException("Can't output non-matches when it's not declared explicitly in a formatter.");
+    }
     return scoreFormatter.formatScore(Double.NEGATIVE_INFINITY) + "\t" + (-1) + "\t" + "+";
   }
 
