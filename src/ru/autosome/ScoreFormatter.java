@@ -1,8 +1,7 @@
 package ru.autosome;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class ScoreFormatter {
   public final DecimalFormat decimalFormat;
@@ -21,7 +20,7 @@ public class ScoreFormatter {
   public ScoreFormatter(Integer precision, ScoreType outputScoringModel, PvalueBsearchList pvalueBsearchList) {
     this.outputScoringModel = outputScoringModel;
     this.pvalueBsearchList = pvalueBsearchList;
-    this.decimalFormat = new DecimalFormat();
+    this.decimalFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
     if (precision == null) {
       decimalFormat.setMaximumFractionDigits(340);
     } else {
