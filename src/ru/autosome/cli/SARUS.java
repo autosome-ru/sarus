@@ -58,8 +58,9 @@ public abstract class SARUS {
         "  [--skipn] - Skip words with N-nucleotides.\n" +
         "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
         "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
-        "  [--dont-add-flanks] - By default polyN-flanks are added to a sequence so that long motif could match short sequence.\n" +
-        "                        This option disables sequence expansion. Thus, there can be too short sequences with no besthit.\n" +
+        "  [--add-flanks] - Add polyN-flanks to sequences so that long motif could match short sequence.\n" +
+        "                   In this mode every sequence will have besthit.\n" +
+        "                   Note that in this mode site can be outside of sequence (coordinates can be even negative).\n" +
         "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
   }
 
@@ -140,9 +141,9 @@ public abstract class SARUS {
       }
     }
 
-    boolean addFlanks = true;
-    if (argsList.remove("--dont-add-flanks")) {
-      addFlanks = false;
+    boolean addFlanks = false;
+    if (argsList.remove("--add-flanks")) {
+      addFlanks = true;
     }
 
     if (argsList.size() != 3) {
@@ -163,7 +164,7 @@ public abstract class SARUS {
     }
 
     if (addFlanks && show_non_matching) {
-      System.err.println("Warning! `--show-non-matching` does nothing when polyN-flanks are added. Take a look at `--dont-add-flanks` options.");
+      System.err.println("Warning! `--show-non-matching` does nothing when polyN-flanks are added with `--add-flanks` options.");
     }
 
     this.fasta_filename = argsList.get(0);
