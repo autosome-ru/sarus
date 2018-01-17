@@ -2,8 +2,13 @@ package ru.autosome.sequenceModel;
 
 // import java.text.DecimalFormat;
 
+import ru.autosome.Occurence;
 import ru.autosome.ResultFormatter;
+import ru.autosome.Strand;
 import ru.autosome.motifModel.PWM;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,29 +28,28 @@ public abstract class Sequence {
   public abstract void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter);
 
   public abstract void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter);
-
-  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
-    double score_direct, score_revcomp;
+  void internalScanCallback(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, Consumer<Occurence> consumer) {
+    Occurence current = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
     for (int i = startIndex; i < endIndex; i++) {
-      score_direct = pwm.score(this, i);
-      if (score_direct >= threshold) {
-        String occurence_info = formatter.format(score_direct, i + shiftForPrint, "+");
-        System.out.println(occurence_info);
-      }
-
-      score_revcomp = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
-      if (score_revcomp >= threshold) {
-        String occurence_info = formatter.format(score_revcomp, i + shiftForPrint, "-");
-        System.out.println(occurence_info);
-      }
+      current.replace(pwm.score(this, i), i, Strand.direct);
+      consumer.accept(current);
+      current.replace(revComp_pwm.score(this, i + shiftForScoreInRevCompPWM), i, Strand.revcomp);
+      consumer.accept(current);
     }
   }
 
-  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
-    double best_score = Double.NEGATIVE_INFINITY;
-    String DNAseq = "+";
-    int index = 0;
+  public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
+    internalScanCallback(pwm, revComp_pwm, startIndex, endIndex, shiftForScoreInRevCompPWM, occurence -> {
+      if (occurence.goodEnough(threshold)) {
+        String occurence_info = formatter.format(occurence.score,
+                occurence.pos + shiftForPrint, occurence.strand.shortSign());
+        System.out.println(occurence_info);
+      }
+    });
 
+  }
+
+  public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
     if (startIndex >= endIndex) { // sequence is shorter than motif
       if (formatter.shouldOutputNoMatch()) {
         System.out.println(formatter.formatNoMatch());
@@ -53,23 +57,12 @@ public abstract class Sequence {
       return;
     }
 
-    for (int i = startIndex; i < endIndex; i++) {
-      double score_direct = pwm.score(this, i);
-      if (score_direct >= best_score) {
-        best_score = score_direct;
-        DNAseq = "+";
-        index = i;
-      }
+    Occurence bestOccurence = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
+    internalScanCallback(pwm, revComp_pwm, startIndex, endIndex, shiftForScoreInRevCompPWM, occurence -> {
+      bestOccurence.replaceIfBetter(occurence);
+    });
 
-      double score_revcomp = revComp_pwm.score(this, i + shiftForScoreInRevCompPWM);
-      if (score_revcomp >= best_score) {
-        best_score = score_revcomp;
-        DNAseq = "-";
-        index = i;
-      }
-    }
-
-    String occurence_info = formatter.format(best_score, index + shiftForPrint, DNAseq);
+    String occurence_info = formatter.format(bestOccurence.score, bestOccurence.pos + shiftForPrint, bestOccurence.strand.shortSign());
     System.out.println(occurence_info);
   }
 }
