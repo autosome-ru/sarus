@@ -38,10 +38,8 @@ public class SDPWM extends DPWM {
     return score;
   }
 
-  public static SDPWM readSDPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
-
+  public static SDPWM fromDPWM(DPWM original_dpwm) {
     double[][] sup_matrix;
-    DPWM original_dpwm = DPWM.readDPWM(path, N_isPermitted, transpose);
     double[][] matrix = original_dpwm.matrix;
 
     if (DPWM.lengthOfDPWMIsEven) {

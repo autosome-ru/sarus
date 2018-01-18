@@ -37,11 +37,9 @@ public class SMPWM extends MPWM {
         return score;
     }
 
-    public static SMPWM readSMPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
-
+    public static SMPWM fromMPWM(MPWM original_mpwm) {
         double[][] sup_matrix;
-        MPWM original_mwpwm = MPWM.readMPWM(path, N_isPermitted, transpose);
-        double[][] matrix = original_mwpwm.matrix;
+        double[][] matrix = original_mpwm.matrix;
 
         if (MPWM.lengthOfMPWMIsEven) {
 
@@ -57,7 +55,7 @@ public class SMPWM extends MPWM {
             makeSMMatrixFromMMatrix(temp_matrix, sup_matrix);
         }
 
-        return new SMPWM(sup_matrix, original_mwpwm.motif_length());
+        return new SMPWM(sup_matrix, original_mpwm.motif_length());
     }
 
     static void makeSMMatrixFromMMatrix(double[][] matrix, double[][] sup_matrix) {

@@ -28,10 +28,11 @@ public class SARUS extends ru.autosome.cli.SARUS {
 
   @Override
   public PWM loadPWM() throws IOException {
+    MPWM mpwm = MPWM.readMPWM(pwm_filename, N_isPermitted, transpose);
     if (naive) {
-      return MPWM.readMPWM(pwm_filename, N_isPermitted, transpose);
+      return mpwm;
     } else {
-      return SMPWM.readSMPWM(pwm_filename, N_isPermitted, transpose);
+      return SMPWM.fromMPWM(mpwm);
     }
   }
 
