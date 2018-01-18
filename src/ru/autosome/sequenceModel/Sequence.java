@@ -15,33 +15,34 @@ public abstract class Sequence {
         this.sequence = sequence;
     }
 
-    public abstract void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter);
+    public abstract int scanningStartIndex();
+    public abstract int scanningEndIndex(PWM pwm);
+    public abstract int shiftForRevcompScore(PWM pwm);
+    public abstract int shiftForPrint();
 
-    public abstract void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter);
-
-    void internalScanCallback(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, Consumer<Occurence> consumer) {
+    void internalScanCallback(PWM pwm, PWM revComp_pwm, Consumer<Occurence> consumer) {
         Occurence current = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
-        for (int i = startIndex; i < endIndex; i++) {
+        for (int i = scanningStartIndex(); i < scanningEndIndex(pwm); i++) {
             current.replace(pwm.score(this, i), i, Strand.direct);
             consumer.accept(current);
-            current.replace(revComp_pwm.score(this, i + shiftForScoreInRevCompPWM), i, Strand.revcomp);
+            current.replace(revComp_pwm.score(this, i + shiftForRevcompScore(pwm)), i, Strand.revcomp);
             consumer.accept(current);
         }
     }
 
-    public void internalScan(PWM pwm, PWM revComp_pwm, double threshold, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
-        internalScanCallback(pwm, revComp_pwm, startIndex, endIndex, shiftForScoreInRevCompPWM, occurence -> {
+    public void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter) {
+        internalScanCallback(pwm, revComp_pwm, occurence -> {
             if (occurence.goodEnough(threshold)) {
                 String occurence_info = formatter.format(occurence.score,
-                        occurence.pos + shiftForPrint, occurence.strand.shortSign());
+                        occurence.pos + shiftForPrint(), occurence.strand.shortSign());
                 System.out.println(occurence_info);
             }
         });
 
     }
 
-    public void internalBestHit(PWM pwm, PWM revComp_pwm, int startIndex, int endIndex, int shiftForScoreInRevCompPWM, int shiftForPrint, ResultFormatter formatter) {
-        if (startIndex >= endIndex) { // sequence is shorter than motif
+    public void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter) {
+        if (scanningStartIndex() >= scanningEndIndex(pwm)) { // sequence is shorter than motif
             if (formatter.shouldOutputNoMatch()) {
                 System.out.println(formatter.formatNoMatch());
             }
@@ -49,11 +50,11 @@ public abstract class Sequence {
         }
 
         Occurence bestOccurence = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
-        internalScanCallback(pwm, revComp_pwm, startIndex, endIndex, shiftForScoreInRevCompPWM, occurence -> {
+        internalScanCallback(pwm, revComp_pwm, occurence -> {
             bestOccurence.replaceIfBetter(occurence);
         });
 
-        String occurence_info = formatter.format(bestOccurence.score, bestOccurence.pos + shiftForPrint, bestOccurence.strand.shortSign());
+        String occurence_info = formatter.format(bestOccurence.score, bestOccurence.pos + shiftForPrint(), bestOccurence.strand.shortSign());
         System.out.println(occurence_info);
     }
 }

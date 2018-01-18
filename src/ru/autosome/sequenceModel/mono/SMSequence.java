@@ -1,9 +1,7 @@
 package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
-import ru.autosome.ResultFormatter;
 import ru.autosome.motifModel.PWM;
-import ru.autosome.motifModel.mono.MPWM;
 import ru.autosome.sequenceModel.Sequence;
 
 public class SMSequence extends Sequence {
@@ -34,27 +32,20 @@ public class SMSequence extends Sequence {
 
     }
 
-    @Override
-    public void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter) {
-        // if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
-        //    throw new RuntimeException();
-
+    @Override public int scanningStartIndex() { return 1; }
+    @Override public int scanningEndIndex(PWM pwm) {
         if (pwm.lengthOfNaiveMotifIsEven()) {
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
+            return this.sequence.length - 2 * pwm.matrix_length() + 1;
         } else {
-            internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
+            return this.sequence.length - 2 * pwm.matrix_length() + 2;
         }
     }
-
-    @Override
-    public void bestHit(PWM pwm, PWM revComp_pwm, ResultFormatter formatter) {
-        //if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
-        //    throw new RuntimeException();
-
+    @Override public int shiftForRevcompScore(PWM pwm) {
         if (pwm.lengthOfNaiveMotifIsEven()) {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
+            return 0;
         } else {
-            internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
+            return -1;
         }
     }
+    @Override public int shiftForPrint() { return -1; }
 }
