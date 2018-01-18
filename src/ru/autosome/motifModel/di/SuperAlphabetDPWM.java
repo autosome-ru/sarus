@@ -1,20 +1,20 @@
 package ru.autosome.motifModel.di;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.PWM;
-import ru.autosome.sequenceModel.di.SDSequence;
+import ru.autosome.motifModel.Motif;
+import ru.autosome.sequenceModel.di.SuperAlphabetDSequence;
 
 import static ru.autosome.utils.with_zero_row;
 
-public class SDPWM implements PWM<SDPWM> {
+public class SuperAlphabetDPWM implements Motif<SuperAlphabetDPWM> {
     public final double[][] matrix;
     private final int motifLength;
-    SDPWM(double[][] matrix, int motifLength) {
+    SuperAlphabetDPWM(double[][] matrix, int motifLength) {
         this.matrix = matrix;
         this.motifLength = motifLength;
     }
 
-    public double score(SDSequence seq, int position) {
+    public double score(SuperAlphabetDSequence seq, int position) {
         double score = 0.0;
         for (int k = 0; k < this.matrix.length; k++) {
             byte letter = seq.sequence[position + 2 * k];
@@ -23,9 +23,9 @@ public class SDPWM implements PWM<SDPWM> {
         return score;
     }
 
-    public static SDPWM fromNaive(DPWM original_dpwm) {
+    public static SuperAlphabetDPWM fromNaive(DPWM originalDPWM) {
         double[][] sup_matrix;
-        double[][] matrix = original_dpwm.matrix;
+        double[][] matrix = originalDPWM.matrix;
 
         if (matrix.length % 2 == 0) {
             sup_matrix = new double[matrix.length / 2][125];
@@ -35,7 +35,7 @@ public class SDPWM implements PWM<SDPWM> {
             makeSDMatrixFromDMatrix(with_zero_row(matrix), sup_matrix);
         }
 
-        return new SDPWM(sup_matrix, original_dpwm.motif_length());
+        return new SuperAlphabetDPWM(sup_matrix, originalDPWM.motif_length());
     }
 
     static void makeSDMatrixFromDMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -55,7 +55,7 @@ public class SDPWM implements PWM<SDPWM> {
     }
 
     @Override
-    public SDPWM revcomp() {
+    public SuperAlphabetDPWM revcomp() {
         double[][] matrix = this.matrix;
         double[][] new_matrix = new double[matrix.length][125];
 
@@ -65,7 +65,7 @@ public class SDPWM implements PWM<SDPWM> {
             }
         }
 
-        return new SDPWM(new_matrix, motifLength);
+        return new SuperAlphabetDPWM(new_matrix, motifLength);
     }
 
     @Override

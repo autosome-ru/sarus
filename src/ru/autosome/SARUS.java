@@ -1,8 +1,8 @@
 package ru.autosome;
 
-import ru.autosome.motifModel.mono.MPWM;
-import ru.autosome.motifModel.mono.SMPWM;
-import ru.autosome.scanningModel.NaivePWMScanner;
+import ru.autosome.motifModel.mono.PWM;
+import ru.autosome.motifModel.mono.SuperAlphabetPWM;
+import ru.autosome.scanningModel.PWMScanner;
 import ru.autosome.scanningModel.SequenceScanner;
 import ru.autosome.scanningModel.SuperAlphabetPWMScanner;
 
@@ -32,11 +32,11 @@ public class SARUS extends ru.autosome.cli.SARUS {
 
     @Override
     public SequenceScanner.Builder makeScannerBuilder() throws IOException {
-        MPWM motif = MPWM.readMPWM(pwm_filename, N_isPermitted, transpose);
+        PWM motif = PWM.readMPWM(pwm_filename, N_isPermitted, transpose);
         if (naive) {
-            return new NaivePWMScanner.Builder(motif, scanDirect, scanRevcomp);
+            return new PWMScanner.Builder(motif, scanDirect, scanRevcomp);
         } else {
-            return new SuperAlphabetPWMScanner.Builder(SMPWM.fromNaive(motif), scanDirect, scanRevcomp);
+            return new SuperAlphabetPWMScanner.Builder(SuperAlphabetPWM.fromNaive(motif), scanDirect, scanRevcomp);
         }
     }
 

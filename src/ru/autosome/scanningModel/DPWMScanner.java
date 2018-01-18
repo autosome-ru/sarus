@@ -3,19 +3,19 @@ package ru.autosome.scanningModel;
 import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.sequenceModel.di.DSequence;
 
-public class NaiveDPWMScanner extends SequenceScanner {
+public class DPWMScanner extends SequenceScanner {
     public static class Builder extends SequenceScanner.Builder<DPWM> {
         public Builder(DPWM motif, boolean scanDirect, boolean scanRevcomp) {
             super(motif, scanDirect, scanRevcomp);
         }
-        public NaiveDPWMScanner scannerForSequence(String str) {
-            return new NaiveDPWMScanner(motif, DSequence.sequenceFromString(str), scanDirect, scanRevcomp);
+        public DPWMScanner scannerForSequence(String str) {
+            return new DPWMScanner(motif, DSequence.sequenceFromString(str), scanDirect, scanRevcomp);
         }
     }
 
     private final DPWM motif, revcomp_motif;
     private final DSequence sequence;
-    public NaiveDPWMScanner(DPWM motif, DSequence sequence, boolean scanDirect, boolean scanRevcomp) {
+    public DPWMScanner(DPWM motif, DSequence sequence, boolean scanDirect, boolean scanRevcomp) {
         super(scanDirect, scanRevcomp);
         this.motif = motif;
         this.revcomp_motif = motif.revcomp();

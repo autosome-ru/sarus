@@ -1,21 +1,21 @@
 package ru.autosome.scanningModel;
 
-import ru.autosome.motifModel.mono.SMPWM;
-import ru.autosome.sequenceModel.mono.SMSequence;
+import ru.autosome.motifModel.mono.SuperAlphabetPWM;
+import ru.autosome.sequenceModel.mono.SuperAlphabetSequence;
 
 public class SuperAlphabetPWMScanner extends SequenceScanner {
-    public static class Builder extends SequenceScanner.Builder<SMPWM> {
-        public Builder(SMPWM motif, boolean scanDirect, boolean scanRevcomp) {
+    public static class Builder extends SequenceScanner.Builder<SuperAlphabetPWM> {
+        public Builder(SuperAlphabetPWM motif, boolean scanDirect, boolean scanRevcomp) {
             super(motif, scanDirect, scanRevcomp);
         }
         public SuperAlphabetPWMScanner scannerForSequence(String str) {
-            return new SuperAlphabetPWMScanner(motif, SMSequence.sequenceFromString(str), scanDirect, scanRevcomp);
+            return new SuperAlphabetPWMScanner(motif, SuperAlphabetSequence.sequenceFromString(str), scanDirect, scanRevcomp);
         }
     }
 
-    private final SMPWM motif, revcomp_motif;
-    private final SMSequence sequence;
-    public SuperAlphabetPWMScanner(SMPWM motif, SMSequence sequence, boolean scanDirect, boolean scanRevcomp) {
+    private final SuperAlphabetPWM motif, revcomp_motif;
+    private final SuperAlphabetSequence sequence;
+    public SuperAlphabetPWMScanner(SuperAlphabetPWM motif, SuperAlphabetSequence sequence, boolean scanDirect, boolean scanRevcomp) {
         super(scanDirect, scanRevcomp);
         this.motif = motif;
         this.revcomp_motif = motif.revcomp();

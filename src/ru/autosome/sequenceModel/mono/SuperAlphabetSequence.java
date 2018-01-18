@@ -2,13 +2,13 @@ package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
 
-public class SMSequence {
+public class SuperAlphabetSequence {
     public final byte[] sequence;
-    SMSequence(byte[] sequence) {
+    SuperAlphabetSequence(byte[] sequence) {
         this.sequence = sequence;
     }
 
-    public static SMSequence sequenceFromString(String str) {
+    public static SuperAlphabetSequence sequenceFromString(String str) {
         int length = str.length();
         byte[] genome = new byte[length + 1];
         genome[0] = (byte) (5 * 4 + Assistant.charToByte(str.charAt(0)));
@@ -16,6 +16,6 @@ public class SMSequence {
             genome[j + 1] = (byte) (5 * Assistant.charToByte(str.charAt(j)) + Assistant.charToByte(str.charAt(j + 1)));
         }
         genome[length] = (byte) (5 * Assistant.charToByte(str.charAt(length - 1)) + 4);
-        return new SMSequence(genome);
+        return new SuperAlphabetSequence(genome);
     }
 }

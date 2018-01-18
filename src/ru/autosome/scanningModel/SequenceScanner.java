@@ -3,12 +3,12 @@ package ru.autosome.scanningModel;
 import ru.autosome.Occurence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
-import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.Motif;
 
 import java.util.function.Consumer;
 
 public abstract class SequenceScanner {
-    public abstract static class Builder<T extends PWM> {
+    public abstract static class Builder<T extends Motif> {
         protected final boolean scanDirect, scanRevcomp;
         protected final T motif;
         Builder(T motif, boolean scanDirect, boolean scanRevcomp) {

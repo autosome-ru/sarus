@@ -1,13 +1,13 @@
 package ru.autosome.motifModel.di;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.PWM;
+import ru.autosome.motifModel.Motif;
 import ru.autosome.sequenceModel.di.DSequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DPWM implements PWM<DPWM> {
+public class DPWM implements Motif<DPWM> {
     public final double[][] matrix;
     DPWM(double[][] matrix) {
         this.matrix = matrix;

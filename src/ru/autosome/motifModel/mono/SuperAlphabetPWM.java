@@ -1,20 +1,20 @@
 package ru.autosome.motifModel.mono;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.PWM;
-import ru.autosome.sequenceModel.mono.SMSequence;
+import ru.autosome.motifModel.Motif;
+import ru.autosome.sequenceModel.mono.SuperAlphabetSequence;
 
 import static ru.autosome.utils.with_zero_row;
 
-public class SMPWM implements PWM<SMPWM> {
+public class SuperAlphabetPWM implements Motif<SuperAlphabetPWM> {
     public final double[][] matrix;
     private final int motifLength;
-    SMPWM(double[][] matrix, int motifLength) {
+    SuperAlphabetPWM(double[][] matrix, int motifLength) {
         this.matrix = matrix;
         this.motifLength = motifLength;
     }
 
-    public double score(SMSequence seq, int position) {
+    public double score(SuperAlphabetSequence seq, int position) {
         double score = 0.0;
         for (int k = 0; k < this.matrix.length; k++) {
             byte letter = seq.sequence[position + 2 * k];
@@ -23,9 +23,9 @@ public class SMPWM implements PWM<SMPWM> {
         return score;
     }
 
-    public static SMPWM fromNaive(MPWM original_mpwm) {
+    public static SuperAlphabetPWM fromNaive(PWM originalPWM) {
         double[][] sup_matrix;
-        double[][] matrix = original_mpwm.matrix;
+        double[][] matrix = originalPWM.matrix;
 
         if (matrix.length % 2 == 0) {
             sup_matrix = new double[matrix.length / 2][25];
@@ -35,7 +35,7 @@ public class SMPWM implements PWM<SMPWM> {
             makeSMMatrixFromMMatrix(with_zero_row(matrix), sup_matrix);
         }
 
-        return new SMPWM(sup_matrix, original_mpwm.motif_length());
+        return new SuperAlphabetPWM(sup_matrix, originalPWM.motif_length());
     }
 
     static void makeSMMatrixFromMMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -54,7 +54,7 @@ public class SMPWM implements PWM<SMPWM> {
     }
 
     @Override
-    public SMPWM revcomp() {
+    public SuperAlphabetPWM revcomp() {
         double[][] matrix = this.matrix;
         double[][] new_matrix = new double[matrix.length][25];
         for (int k = 0; k < matrix.length; k++) {
@@ -62,7 +62,7 @@ public class SMPWM implements PWM<SMPWM> {
                 new_matrix[matrix.length - 1 - k][j] = matrix[k][Assistant.dComplimentaryElements[j]];
             }
         }
-        return new SMPWM(new_matrix, motifLength);
+        return new SuperAlphabetPWM(new_matrix, motifLength);
     }
 
     @Override

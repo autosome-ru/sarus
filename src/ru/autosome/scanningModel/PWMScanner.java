@@ -1,21 +1,21 @@
 package ru.autosome.scanningModel;
 
-import ru.autosome.motifModel.mono.MPWM;
-import ru.autosome.sequenceModel.mono.MSequence;
+import ru.autosome.motifModel.mono.PWM;
+import ru.autosome.sequenceModel.mono.Sequence;
 
-public class NaivePWMScanner extends SequenceScanner {
-    public static class Builder extends SequenceScanner.Builder<MPWM> {
-        public Builder(MPWM motif, boolean scanDirect, boolean scanRevcomp) {
+public class PWMScanner extends SequenceScanner {
+    public static class Builder extends SequenceScanner.Builder<PWM> {
+        public Builder(PWM motif, boolean scanDirect, boolean scanRevcomp) {
             super(motif, scanDirect, scanRevcomp);
         }
-        public NaivePWMScanner scannerForSequence(String str) {
-            return new NaivePWMScanner(motif, MSequence.sequenceFromString(str), scanDirect, scanRevcomp);
+        public PWMScanner scannerForSequence(String str) {
+            return new PWMScanner(motif, Sequence.sequenceFromString(str), scanDirect, scanRevcomp);
         }
     }
 
-    private final MPWM motif, revcomp_motif;
-    private final MSequence sequence;
-    public NaivePWMScanner(MPWM motif, MSequence sequence, boolean scanDirect, boolean scanRevcomp) {
+    private final PWM motif, revcomp_motif;
+    private final Sequence sequence;
+    public PWMScanner(PWM motif, Sequence sequence, boolean scanDirect, boolean scanRevcomp) {
         super(scanDirect, scanRevcomp);
         this.motif = motif;
         this.revcomp_motif = motif.revcomp();

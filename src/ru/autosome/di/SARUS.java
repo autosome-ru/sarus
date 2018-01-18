@@ -1,8 +1,8 @@
 package ru.autosome.di;
 
 import ru.autosome.motifModel.di.DPWM;
-import ru.autosome.motifModel.di.SDPWM;
-import ru.autosome.scanningModel.NaiveDPWMScanner;
+import ru.autosome.motifModel.di.SuperAlphabetDPWM;
+import ru.autosome.scanningModel.DPWMScanner;
 import ru.autosome.scanningModel.SequenceScanner;
 import ru.autosome.scanningModel.SuperAlphabetDPWMScanner;
 
@@ -33,9 +33,9 @@ public class SARUS extends ru.autosome.cli.SARUS {
     public SequenceScanner.Builder makeScannerBuilder() throws IOException {
         DPWM motif = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
         if (naive) {
-            return new NaiveDPWMScanner.Builder(motif, scanDirect, scanRevcomp);
+            return new DPWMScanner.Builder(motif, scanDirect, scanRevcomp);
         } else {
-            return new SuperAlphabetDPWMScanner.Builder(SDPWM.fromNaive(motif), scanDirect, scanRevcomp);
+            return new SuperAlphabetDPWMScanner.Builder(SuperAlphabetDPWM.fromNaive(motif), scanDirect, scanRevcomp);
         }
     }
 
