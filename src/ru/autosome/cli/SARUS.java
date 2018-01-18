@@ -1,8 +1,7 @@
 package ru.autosome.cli;
 
 import ru.autosome.*;
-import ru.autosome.motifModel.PWM;
-import ru.autosome.sequenceModel.Sequence;
+import ru.autosome.scanningModel.SequenceScanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +24,15 @@ public abstract class SARUS {
     protected boolean outputAsBed;
     protected String motifName;
     protected boolean show_non_matching;
-    protected int flankLength;
+    protected boolean addFlanks;
 
     protected String fasta_filename;
     protected String pwm_filename;
     protected String thresholdOrBesthit;
+    protected boolean lookForBestHit;
+    protected Double threshold;
 
-    protected PWM pwm, revcomp_pwm;
+    protected boolean scanDirect, scanRevcomp;
     protected ScoreFormatter scoreFormatter;
 
     public abstract String classNameHelp();
@@ -67,9 +68,7 @@ public abstract class SARUS {
                 "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
     }
 
-    abstract public PWM loadPWM() throws IOException;
-
-    abstract public Sequence convertSequence(String sequence);
+    abstract public SequenceScanner.Builder makeScannerBuilder() throws IOException;
 
     public void setupFromArglist(ArrayList<String> argsList) throws IOException {
         if (argsList.contains("-h") || argsList.contains("--help")) {
@@ -145,9 +144,9 @@ public abstract class SARUS {
             }
         }
 
-        boolean addFlanks = false;
+        this.addFlanks = false;
         if (argsList.remove("--add-flanks")) {
-            addFlanks = true;
+            this.addFlanks = true;
         }
 
         if (argsList.size() != 3) {
@@ -180,26 +179,28 @@ public abstract class SARUS {
 
         this.scoreFormatter = new ScoreFormatter(precision, outputScoringModel, pvalueBsearchList);
 
-        this.pwm = loadPWM();
-        this.revcomp_pwm = pwm.revcomp();
-
-        if (addFlanks) {
-            this.flankLength = pwm.motif_length();
-        } else {
-            this.flankLength = 0;
-        }
-
-        // replace with fake pwm if 1-strand search is used
+        scanDirect = true;
+        scanRevcomp = true;
         if (only_direct && only_revcomp) {
             throw new IllegalArgumentException("Only-direct and only-revcomp modes are specified simultaneously");
         } else if (only_direct) {
-            this.revcomp_pwm = PWM.makeDummy(revcomp_pwm.matrix_length(), revcomp_pwm.lengthOfNaiveMotifIsEven());
+            scanRevcomp = false;
         } else if (only_revcomp) {
-            this.pwm = PWM.makeDummy(pwm.matrix_length(), pwm.lengthOfNaiveMotifIsEven());
+            scanDirect = false;
+        }
+
+        if (thresholdOrBesthit.matches("besthit")) {
+            this.lookForBestHit = true;
+        } else {
+            this.lookForBestHit = false;
+            this.threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(thresholdOrBesthit), pvalueBsearchList);
         }
     }
 
     public void run() throws IOException {
+        SequenceScanner.Builder builder = makeScannerBuilder();
+        int motifLength = builder.getMotif().motif_length();
+        int flankLength = addFlanks ? motifLength : 0;
         ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching, flankLength);
         String flank = utils.polyN_flank(flankLength);
 
@@ -208,7 +209,7 @@ public abstract class SARUS {
             if (outputAsBed) {
                 utils.IntervalStartCoordinate intervalCoordinate = utils.IntervalStartCoordinate.fromIntervalNotation(namedSequence.getName());
                 String intervalName = motifName + ";" + namedSequence.getName().split("\\t")[0];
-                formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, pwm.motif_length(), show_non_matching, flankLength);
+                formatter = new BedResultFormatter(scoreFormatter, intervalCoordinate.chromosome, intervalCoordinate.startPos, intervalName, motifLength, show_non_matching, flankLength);
             } else {
                 formatter = sarusFormatter;
             }
@@ -217,13 +218,12 @@ public abstract class SARUS {
                 System.out.println(">" + namedSequence.getName());
             }
 
-            Sequence seq = convertSequence(flank + namedSequence.getSequence() + flank);
+            SequenceScanner scanner = builder.scannerForSequence(flank + namedSequence.getSequence() + flank);
 
-            if (thresholdOrBesthit.matches("besthit")) {
-                seq.bestHit(pwm, revcomp_pwm, formatter);
+            if (lookForBestHit) {
+                scanner.bestHit(formatter);
             } else {
-                double threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(thresholdOrBesthit), pvalueBsearchList);
-                seq.scan(pwm, revcomp_pwm, threshold, formatter);
+                scanner.scan(threshold, formatter);
             }
         }
     }

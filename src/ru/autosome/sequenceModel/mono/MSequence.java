@@ -1,13 +1,11 @@
 package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.PWM;
-import ru.autosome.sequenceModel.Sequence;
 
-public class MSequence extends Sequence {
-
+public class MSequence {
+    public final byte[] sequence;
     MSequence(byte[] sequence) {
-        super(sequence);
+        this.sequence = sequence;
     }
 
     public static MSequence sequenceFromString(String str) {
@@ -18,9 +16,4 @@ public class MSequence extends Sequence {
         }
         return new MSequence(genome);
     }
-
-    @Override public int scanningStartIndex() { return 0; }
-    @Override public int scanningEndIndex(PWM pwm) { return this.sequence.length - pwm.matrix_length() + 1; }
-    @Override public int shiftForRevcompScore(PWM pwm) { return 0; }
-    @Override public int shiftForPrint() { return 0; }
 }

@@ -1,11 +1,10 @@
 package ru.autosome.di;
 
-import ru.autosome.motifModel.PWM;
 import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.motifModel.di.SDPWM;
-import ru.autosome.sequenceModel.Sequence;
-import ru.autosome.sequenceModel.di.DSequence;
-import ru.autosome.sequenceModel.di.SDSequence;
+import ru.autosome.scanningModel.NaiveDPWMScanner;
+import ru.autosome.scanningModel.SequenceScanner;
+import ru.autosome.scanningModel.SuperAlphabetDPWMScanner;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,26 +26,17 @@ public class SARUS extends ru.autosome.cli.SARUS {
         return "ru.autosome.ape.di.PrecalculateThresholds";
     }
 
-    @Override
-    public PWM loadPWM() throws IOException {
-        DPWM dpwm = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
-        if (naive) {
-            return dpwm;
-        } else {
-            return SDPWM.fromDPWM(dpwm);
-        }
-    }
-
-    @Override
-    public Sequence convertSequence(String sequence) {
-        if (naive) {
-            return DSequence.sequenceFromString(sequence);
-        } else {
-            return SDSequence.sequenceFromString(sequence);
-        }
-    }
-
     SARUS() {
+    }
+
+    @Override
+    public SequenceScanner.Builder makeScannerBuilder() throws IOException {
+        DPWM motif = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
+        if (naive) {
+            return new NaiveDPWMScanner.Builder(motif, scanDirect, scanRevcomp);
+        } else {
+            return new SuperAlphabetDPWMScanner.Builder(SDPWM.fromNaive(motif), scanDirect, scanRevcomp);
+        }
     }
 
     public static void main(String[] args) throws IOException {

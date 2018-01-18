@@ -1,13 +1,11 @@
 package ru.autosome.sequenceModel.di;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.PWM;
-import ru.autosome.sequenceModel.Sequence;
 
-public class DSequence extends Sequence {
-
+public class DSequence {
+    public final byte[] sequence;
     DSequence(byte[] sequence) {
-        super(sequence);
+        this.sequence = sequence;
     }
 
     public static DSequence sequenceFromString(String str) {
@@ -18,9 +16,4 @@ public class DSequence extends Sequence {
         }
         return new DSequence(genome);
     }
-
-    @Override public int scanningStartIndex() { return 0; }
-    @Override public int scanningEndIndex(PWM pwm) { return this.sequence.length - pwm.matrix_length() + 1; }
-    @Override public int shiftForRevcompScore(PWM pwm) { return 0; }
-    @Override public int shiftForPrint() { return 0; }
 }
