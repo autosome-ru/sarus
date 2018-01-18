@@ -68,4 +68,17 @@ public class utils {
             return new IntervalStartCoordinate(chrName, startPos);
         }
     }
+
+    public static double[][] with_zero_row(double[][] matrix) {
+        if (matrix.length == 0) {
+            throw new IllegalArgumentException("Can't add zero row to an empty matrix");
+        }
+        int row_length = matrix[0].length;
+        double[][] result = new double[matrix.length + 1][row_length];
+        System.arraycopy(matrix, 0, result, 0, matrix.length);
+        for (int i = 0; i < row_length; i++) {
+            result[matrix.length][i] = 0;
+        }
+        return result;
+    }
 }

@@ -5,6 +5,8 @@ import ru.autosome.motifModel.PWM;
 import ru.autosome.sequenceModel.Sequence;
 import ru.autosome.sequenceModel.mono.SMSequence;
 
+import static ru.autosome.utils.with_zero_row;
+
 public class SMPWM extends PWM {
     private final int motifLength;
 
@@ -38,14 +40,8 @@ public class SMPWM extends PWM {
             sup_matrix = new double[(matrix.length) / 2][25];
             makeSMMatrixFromMMatrix(matrix, sup_matrix);
         } else {
-            double[][] temp_matrix = new double[matrix.length + 1][5];
-            System.arraycopy(matrix, 0, temp_matrix, 0, matrix.length);
-            for (int i = 0; i < 5; i++) {
-                temp_matrix[temp_matrix.length - 1][i] = 0;
-            }
-
             sup_matrix = new double[(matrix.length) / 2 + 1][25];
-            makeSMMatrixFromMMatrix(temp_matrix, sup_matrix);
+            makeSMMatrixFromMMatrix(with_zero_row(matrix), sup_matrix);
         }
 
         return new SMPWM(sup_matrix, original_mpwm.motif_length(), original_mpwm.lengthOfNaiveMotifIsEven());
