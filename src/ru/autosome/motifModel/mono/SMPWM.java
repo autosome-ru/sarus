@@ -1,10 +1,9 @@
 package ru.autosome.motifModel.mono;
 
 import ru.autosome.Assistant;
-import ru.autosome.sequenceModel.mono.SMSequence;
+import ru.autosome.motifModel.PWM;
 import ru.autosome.sequenceModel.Sequence;
-
-import java.io.IOException;
+import ru.autosome.sequenceModel.mono.SMSequence;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +12,7 @@ import java.io.IOException;
  * Time: 15:22
  * To change this template use File | Settings | File Templates.
  */
-public class SMPWM extends MPWM {
+public class SMPWM extends PWM {
     private final int motifLength;
     SMPWM(double[][] matrix, int motifLength){
         super(matrix);

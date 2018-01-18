@@ -1,10 +1,9 @@
 package ru.autosome.motifModel.di;
 
 import ru.autosome.Assistant;
-import ru.autosome.sequenceModel.di.SDSequence;
+import ru.autosome.motifModel.PWM;
 import ru.autosome.sequenceModel.Sequence;
-
-import java.io.IOException;
+import ru.autosome.sequenceModel.di.SDSequence;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +12,7 @@ import java.io.IOException;
  * Time: 13:58
  * To change this template use File | Settings | File Templates.
  */
-public class SDPWM extends DPWM {
+public class SDPWM extends PWM {
 
   private final int motifLength;
   SDPWM(double[][] matrix, int motifLength) {

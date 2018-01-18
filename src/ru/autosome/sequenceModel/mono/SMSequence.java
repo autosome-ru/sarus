@@ -47,7 +47,7 @@ public class SMSequence extends Sequence {
         // if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
-        if(SMPWM.lengthOfMPWMIsEven){
+        if(MPWM.lengthOfMPWMIsEven){
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
         }  else {
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
