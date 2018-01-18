@@ -12,11 +12,8 @@ public class DSequence extends Sequence {
 
     public static DSequence sequenceFromString(String str) {
         int length = str.length();
-
         byte[] genome = new byte[length - 1];
-
-        for (int j = 0; j < length - 1; j++) {
-            // A C G T N
+        for (int j = 0; j < length - 1; j++) {  // A C G T N
             genome[j] = (byte) (5 * Assistant.charToByte(str.charAt(j)) + Assistant.charToByte(str.charAt(j + 1)));
         }
         return new DSequence(genome);

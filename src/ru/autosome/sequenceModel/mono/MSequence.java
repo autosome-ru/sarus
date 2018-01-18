@@ -11,16 +11,11 @@ public class MSequence extends Sequence {
     }
 
     public static MSequence sequenceFromString(String str) {
-
         int length = str.length();
-
         byte[] genome = new byte[length];
-
-        for (int j = 0; j < length; j++) {
-            // A C G T N
+        for (int j = 0; j < length; j++) {  // A C G T N
             genome[j] = Assistant.charToByte(str.charAt(j));
         }
-
         return new MSequence(genome);
     }
 
