@@ -4,26 +4,18 @@ import ru.autosome.Assistant;
 import ru.autosome.ResultFormatter;
 import ru.autosome.motifModel.PWM;
 import ru.autosome.motifModel.mono.MPWM;
-import ru.autosome.motifModel.mono.SMPWM;
 import ru.autosome.sequenceModel.Sequence;
 
-/**
- * Created with IntelliJ IDEA.
- * User: nastia
- * Date: 20.07.14
- * Time: 19:37
- * To change this template use File | Settings | File Templates.
- */
 public class SMSequence extends Sequence {
 
-    SMSequence(byte[] sequence){
+    SMSequence(byte[] sequence) {
         super(sequence);
     }
 
-    public static SMSequence sequenceFromString(String str){
+    public static SMSequence sequenceFromString(String str) {
 
         int length = str.length();
-        byte[] genome = new byte[length+1];
+        byte[] genome = new byte[length + 1];
 
 
         genome[0] = (byte) (5 * 4 +
@@ -43,13 +35,13 @@ public class SMSequence extends Sequence {
     }
 
     @Override
-    public void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter){
+    public void scan(PWM pwm, PWM revComp_pwm, double threshold, ResultFormatter formatter) {
         // if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
-        if(MPWM.lengthOfMPWMIsEven){
+        if (MPWM.lengthOfMPWMIsEven) {
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
-        }  else {
+        } else {
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
         }
     }

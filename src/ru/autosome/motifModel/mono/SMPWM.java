@@ -5,16 +5,10 @@ import ru.autosome.motifModel.PWM;
 import ru.autosome.sequenceModel.Sequence;
 import ru.autosome.sequenceModel.mono.SMSequence;
 
-/**
- * Created with IntelliJ IDEA.
- * User: nastia
- * Date: 20.07.14
- * Time: 15:22
- * To change this template use File | Settings | File Templates.
- */
 public class SMPWM extends PWM {
     private final int motifLength;
-    SMPWM(double[][] matrix, int motifLength){
+
+    SMPWM(double[][] matrix, int motifLength) {
         super(matrix);
         this.motifLength = motifLength;
     }
@@ -48,7 +42,9 @@ public class SMPWM extends PWM {
 
             double[][] temp_matrix = new double[matrix.length + 1][5];
             System.arraycopy(matrix, 0, temp_matrix, 0, matrix.length);
-            for (int i = 0; i < 5; i++) {temp_matrix[temp_matrix.length - 1][i] = 0;}
+            for (int i = 0; i < 5; i++) {
+                temp_matrix[temp_matrix.length - 1][i] = 0;
+            }
 
             sup_matrix = new double[(matrix.length) / 2 + 1][25];
             makeSMMatrixFromMMatrix(temp_matrix, sup_matrix);
@@ -64,11 +60,11 @@ public class SMPWM extends PWM {
             int k = 0, j = 0;
 
             for (int n = 0; n < 25; n++) {
-                if(n > 0 && n%5 == 0){
-                    k+=1;
+                if (n > 0 && n % 5 == 0) {
+                    k += 1;
                     j = 0;
                 }
-                sup_matrix[l][n] = matrix[2*l][k]+matrix[2 * l + 1][j];
+                sup_matrix[l][n] = matrix[2 * l][k] + matrix[2 * l + 1][j];
                 j++;
             }
         }
@@ -76,7 +72,7 @@ public class SMPWM extends PWM {
     }
 
     @Override
-    public SMPWM revcomp(){
+    public SMPWM revcomp() {
         double[][] matrix = this.matrix;
         double[][] new_matrix = new double[matrix.length][25];
 

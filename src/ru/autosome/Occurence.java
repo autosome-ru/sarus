@@ -5,7 +5,7 @@ public class Occurence {
     public int pos;
     public Strand strand;
 
-    public Occurence(double score, int pos, Strand strand){
+    public Occurence(double score, int pos, Strand strand) {
         this.score = score;
         this.pos = pos;
         this.strand = strand;
