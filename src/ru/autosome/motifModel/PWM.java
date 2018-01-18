@@ -6,11 +6,16 @@ import ru.autosome.sequenceModel.Sequence;
 public abstract class PWM {
 
     public final double[][] matrix;
+    private final boolean _lengthOfNaiveMotifIsEven;
 
-    public PWM(double[][] matrix) {
+    public PWM(double[][] matrix, boolean lengthOfNaiveMotifIsEven) {
         this.matrix = matrix;
+        this._lengthOfNaiveMotifIsEven = lengthOfNaiveMotifIsEven;
     }
 
+    public boolean lengthOfNaiveMotifIsEven() {
+        return _lengthOfNaiveMotifIsEven;
+    }
     public abstract double score(Sequence seq, int position);
 
     public abstract PWM revcomp();
@@ -21,14 +26,14 @@ public abstract class PWM {
 
     abstract public int motif_length(); // length of matched sequence in nucleotides
 
-    public static PWM makeDummy(int length) {
-        return new Dummy(length);
+    public static PWM makeDummy(int length, boolean lengthOfNaiveMotifIsEven) {
+        return new Dummy(length, lengthOfNaiveMotifIsEven);
     }
 
     private static class Dummy extends PWM {
 
-        public Dummy(int length) {
-            super(new double[length][]);
+        public Dummy(int length, boolean lengthOfNaiveMotifIsEven) {
+            super(new double[length][], lengthOfNaiveMotifIsEven);
         }
 
         @Override

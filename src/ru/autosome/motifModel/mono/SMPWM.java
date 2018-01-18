@@ -8,8 +8,8 @@ import ru.autosome.sequenceModel.mono.SMSequence;
 public class SMPWM extends PWM {
     private final int motifLength;
 
-    SMPWM(double[][] matrix, int motifLength) {
-        super(matrix);
+    SMPWM(double[][] matrix, int motifLength, boolean lengthOfNaiveMotifIsEven) {
+        super(matrix, lengthOfNaiveMotifIsEven);
         this.motifLength = motifLength;
     }
 
@@ -34,12 +34,10 @@ public class SMPWM extends PWM {
         double[][] sup_matrix;
         double[][] matrix = original_mpwm.matrix;
 
-        if (MPWM.lengthOfMPWMIsEven) {
-
+        if (original_mpwm.lengthOfNaiveMotifIsEven()) {
             sup_matrix = new double[(matrix.length) / 2][25];
             makeSMMatrixFromMMatrix(matrix, sup_matrix);
         } else {
-
             double[][] temp_matrix = new double[matrix.length + 1][5];
             System.arraycopy(matrix, 0, temp_matrix, 0, matrix.length);
             for (int i = 0; i < 5; i++) {
@@ -50,7 +48,7 @@ public class SMPWM extends PWM {
             makeSMMatrixFromMMatrix(temp_matrix, sup_matrix);
         }
 
-        return new SMPWM(sup_matrix, original_mpwm.motif_length());
+        return new SMPWM(sup_matrix, original_mpwm.motif_length(), original_mpwm.lengthOfNaiveMotifIsEven());
     }
 
     static void makeSMMatrixFromMMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -82,7 +80,7 @@ public class SMPWM extends PWM {
             }
         }
 
-        return new SMPWM(new_matrix, motifLength);
+        return new SMPWM(new_matrix, motifLength, lengthOfNaiveMotifIsEven());
     }
 
     @Override

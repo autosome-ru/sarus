@@ -39,7 +39,7 @@ public class SMSequence extends Sequence {
         // if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
-        if (MPWM.lengthOfMPWMIsEven) {
+        if (pwm.lengthOfNaiveMotifIsEven()) {
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
         } else {
             internalScan(pwm, revComp_pwm, threshold, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);
@@ -51,7 +51,7 @@ public class SMSequence extends Sequence {
         //if (pwm.getClass() != SMPWM.class || revComp_pwm.getClass() != SMPWM.class)
         //    throw new RuntimeException();
 
-        if (MPWM.lengthOfMPWMIsEven) {
+        if (pwm.lengthOfNaiveMotifIsEven()) {
             internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 1, 0, -1, formatter);
         } else {
             internalBestHit(pwm, revComp_pwm, 1, this.sequence.length - 2 * pwm.matrix_length() + 2, -1, -1, formatter);

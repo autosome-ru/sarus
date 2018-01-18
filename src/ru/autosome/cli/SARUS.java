@@ -193,9 +193,9 @@ public abstract class SARUS {
         if (only_direct && only_revcomp) {
             throw new IllegalArgumentException("Only-direct and only-revcomp modes are specified simultaneously");
         } else if (only_direct) {
-            this.revcomp_pwm = PWM.makeDummy(revcomp_pwm.matrix_length());
+            this.revcomp_pwm = PWM.makeDummy(revcomp_pwm.matrix_length(), revcomp_pwm.lengthOfNaiveMotifIsEven());
         } else if (only_revcomp) {
-            this.pwm = PWM.makeDummy(pwm.matrix_length());
+            this.pwm = PWM.makeDummy(pwm.matrix_length(), pwm.lengthOfNaiveMotifIsEven());
         }
     }
 

@@ -10,10 +10,8 @@ import java.util.ArrayList;
 
 public class DPWM extends PWM {
 
-    public static boolean lengthOfDPWMIsEven;
-
-    DPWM(double[][] matrix) {
-        super(matrix);
+    DPWM(double[][] matrix, boolean lengthOfNaiveMotifIsEven) {
+        super(matrix, lengthOfNaiveMotifIsEven);
     }
 
     @Override
@@ -39,7 +37,6 @@ public class DPWM extends PWM {
         ArrayList<Double[]> parsed = Assistant.parseDi(strings, transpose);
 
         int len = parsed.size();
-        lengthOfDPWMIsEven = (len % 2 == 0);
 
         double[][] resultPWM = new double[len][25];
 
@@ -70,7 +67,7 @@ public class DPWM extends PWM {
                 }
             }
         }
-        return new DPWM(resultPWM);
+        return new DPWM(resultPWM, len % 2 == 0);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class DPWM extends PWM {
             }
         }
 
-        return new DPWM(new_matrix);
+        return new DPWM(new_matrix, lengthOfNaiveMotifIsEven());
     }
 
     @Override

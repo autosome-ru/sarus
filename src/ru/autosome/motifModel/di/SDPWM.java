@@ -9,8 +9,8 @@ public class SDPWM extends PWM {
 
     private final int motifLength;
 
-    SDPWM(double[][] matrix, int motifLength) {
-        super(matrix);
+    SDPWM(double[][] matrix, int motifLength, boolean lengthOfNaiveMotifIsEven) {
+        super(matrix, lengthOfNaiveMotifIsEven);
         this.motifLength = motifLength;
     }
 
@@ -35,12 +35,10 @@ public class SDPWM extends PWM {
         double[][] sup_matrix;
         double[][] matrix = original_dpwm.matrix;
 
-        if (DPWM.lengthOfDPWMIsEven) {
-
+        if (original_dpwm.lengthOfNaiveMotifIsEven()) {
             sup_matrix = new double[(matrix.length) / 2][125];
             makeSDMatrixFromDMatrix(matrix, sup_matrix);
         } else {
-
             double[][] temp_matrix = new double[matrix.length + 1][25];
             System.arraycopy(matrix, 0, temp_matrix, 0, matrix.length);
             for (int i = 0; i < 25; i++) {
@@ -51,7 +49,7 @@ public class SDPWM extends PWM {
             makeSDMatrixFromDMatrix(temp_matrix, sup_matrix);
         }
 
-        return new SDPWM(sup_matrix, original_dpwm.motif_length());
+        return new SDPWM(sup_matrix, original_dpwm.motif_length(), original_dpwm.lengthOfNaiveMotifIsEven());
     }
 
     static void makeSDMatrixFromDMatrix(double[][] matrix, double[][] sup_matrix) {
@@ -87,7 +85,7 @@ public class SDPWM extends PWM {
             }
         }
 
-        return new SDPWM(new_matrix, motifLength);
+        return new SDPWM(new_matrix, motifLength, lengthOfNaiveMotifIsEven());
     }
 
     @Override
