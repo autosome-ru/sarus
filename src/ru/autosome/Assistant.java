@@ -147,6 +147,16 @@ public class Assistant {
         return result;
     }
 
+    public static double[][] listDoubleRowsToMatrix(ArrayList<Double[]> rows) {
+        int numCols = rows.get(0).length;
+        double[][] matrix = new double[rows.size()][numCols];
+        for (int i = 0; i < rows.size(); ++i) {
+            for (int j = 0; j < numCols; ++j)
+            matrix[i][j] = rows.get(i)[j];
+        }
+        return matrix;
+    }
+
     public static ArrayList<Double[]> parseMono(ArrayList<String> strings, boolean transpose) {
         ArrayList<Double[]> result = new ArrayList<Double[]>();
         if (strings.get(0).length() >= 25 && strings.get(0).subSequence(0, 25).equals("PROG|ru.autosome.ChIPMunk")) {

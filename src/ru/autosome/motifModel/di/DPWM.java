@@ -7,6 +7,8 @@ import ru.autosome.sequenceModel.di.DSequence;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static ru.autosome.Assistant.listDoubleRowsToMatrix;
+
 public class DPWM implements Motif<DPWM> {
     public final double[][] matrix;
     DPWM(double[][] matrix) {
@@ -22,37 +24,43 @@ public class DPWM implements Motif<DPWM> {
         return score;
     }
 
+    public static double[][] matrixAcceptingN(double[][] matrix, boolean N_isPermitted) {
+        double[][] result = new double[matrix.length][25];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int first_letter = 0; first_letter < 4; ++first_letter) {
+                for (int second_letter = 0; second_letter < 4; ++second_letter) { // [ACGT][ACGT]
+                    result[i][5 * first_letter + second_letter] = matrix[i][4 * first_letter + second_letter];
+                }
+            }
+            for (int first_letter = 0; first_letter < 4; ++first_letter) { // [ACGT]N
+                double sum = 0.0;
+                for (int second_letter = 0; second_letter < 4; ++second_letter) {
+                    sum += matrix[i][4 * first_letter + second_letter];
+                }
+                result[i][5 * first_letter + 4] = N_isPermitted ? (sum / 4) : Double.NEGATIVE_INFINITY;
+            }
+            for (int second_letter = 0; second_letter < 4; ++second_letter) { // N[ACGT]
+                double sum = 0.0;
+                for (int first_letter = 0; first_letter < 4; ++first_letter) {
+                    sum += matrix[i][4 * first_letter + second_letter];
+                }
+                result[i][5 * 4 + second_letter] = N_isPermitted ? (sum / 4) : Double.NEGATIVE_INFINITY;
+            }
+            {
+                double sum = 0;
+                for (int di_letter = 0; di_letter < 16; ++di_letter) {
+                    sum += matrix[i][di_letter];
+                }
+                result[i][5 * 4 + 4] = N_isPermitted ? (sum / 16) : Double.NEGATIVE_INFINITY;
+            }
+        }
+        return result;
+    }
+
     public static DPWM readDPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
         ArrayList<String> strings = Assistant.load(path);
         ArrayList<Double[]> parsed = Assistant.parseDi(strings, transpose);
-        int len = parsed.size();
-        double[][] resultPWM = new double[len][25];
-
-        for (int i = 0; i < len; i++) {
-            Double[] line = parsed.get(i);
-            int j;
-            int a = 0;
-            for (j = 0; j < 20; j++) {
-                if (((j + 1) % 5) != 0) { // [ACGT][ACGT]
-                    resultPWM[i][j] = line[a];
-                    a += 1;
-                } else { // [ACGT]N
-                    if (N_isPermitted) {
-                        resultPWM[i][j] = (resultPWM[i][j - 4] + resultPWM[i][j - 3] + resultPWM[i][j - 2] + resultPWM[i][j - 1]) / 4;
-                    } else {
-                        resultPWM[i][j] = Double.NEGATIVE_INFINITY;
-                    }
-                }
-            }
-            for (j = 20; j < 25; j++) { // N[ACGT] and NN
-                if (N_isPermitted) {
-                    resultPWM[i][j] = (resultPWM[i][j % 5] + resultPWM[i][5 + j % 5] + resultPWM[i][10 + j % 5] + resultPWM[i][15 + j % 5]) / 4;
-                } else {
-                    resultPWM[i][j] = Double.NEGATIVE_INFINITY;
-                }
-            }
-        }
-        return new DPWM(resultPWM);
+        return new DPWM(matrixAcceptingN(listDoubleRowsToMatrix(parsed), N_isPermitted));
     }
 
     @Override

@@ -7,6 +7,8 @@ import ru.autosome.sequenceModel.mono.Sequence;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static ru.autosome.Assistant.listDoubleRowsToMatrix;
+
 public class PWM implements Motif<PWM> {
     public final double[][] matrix;
     PWM(double[][] matrix) {
@@ -22,26 +24,23 @@ public class PWM implements Motif<PWM> {
         return score;
     }
 
+    public static double[][] matrixAcceptingN(double[][] matrix, boolean N_isPermitted) {
+        double[][] result = new double[matrix.length][5];
+        for (int i = 0; i < matrix.length; i++) {
+            double sum = 0.0;
+            for (int letter = 0; letter < 4; ++letter) {
+                result[i][letter] = matrix[i][letter];
+                sum += matrix[i][letter];
+            }
+            result[i][4] = N_isPermitted ? (sum / 4) : Double.NEGATIVE_INFINITY;
+        }
+        return result;
+    }
+
     public static PWM readMPWM(String path, boolean N_isPermitted, boolean transpose) throws IOException {
         ArrayList<String> strings = Assistant.load(path);
         ArrayList<Double[]> parsed = Assistant.parseMono(strings, transpose);
-
-        int len = parsed.size();
-        double[][] resultPWM = new double[len][5];
-
-        for (int i = 0; i < len; i++) {
-            Double[] line = parsed.get(i);
-            for (int j = 0; j < 4; j++) {
-                resultPWM[i][j] = line[j];
-            }
-
-            if (N_isPermitted) {
-                resultPWM[i][4] = (resultPWM[i][0] + resultPWM[i][1] + resultPWM[i][2] + resultPWM[i][3]) / 4;
-            } else {
-                resultPWM[i][4] = Double.NEGATIVE_INFINITY;
-            }
-        }
-        return new PWM(resultPWM);
+        return new PWM(matrixAcceptingN(listDoubleRowsToMatrix(parsed), N_isPermitted));
     }
 
     @Override
