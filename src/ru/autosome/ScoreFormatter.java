@@ -21,6 +21,7 @@ public class ScoreFormatter {
         this.outputScoringModel = outputScoringModel;
         this.pvalueBsearchList = pvalueBsearchList;
         this.decimalFormat = (DecimalFormat) DecimalFormat.getInstance(Locale.ROOT);
+        this.decimalFormat.setGroupingUsed(false);
         if (precision == null) {
             decimalFormat.setMaximumFractionDigits(340);
         } else {
