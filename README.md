@@ -93,7 +93,7 @@ is treated and what is output as a result:
 *  `--naive`
     Don't use superalphabet-based scoring algorithm
 *  `--precision N`
-    round result (either score or P-value) up to N digits after floating point
+    round result (either score or P-value) up to N digits after floating point. Doesn't affect the internal precision of calculations.
   
 TF binding motifs with long flanking sequences can hang over given short
 sequences. By default SARUS ignores sites which aren't totally inside of the 
