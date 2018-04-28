@@ -50,12 +50,12 @@ SPRY-SARUS operates in two different modes.
 In the first mode it looks for the only best occurence (besthit)
 of the motif in a sequence:
 
-```java -cp ru.autosome.SARUS <sequences.multifasta> <weight.matrix> besthit```
+```java -cp sarus.jar ru.autosome.SARUS <sequences.multifasta> <weight.matrix> besthit```
 
 Another option is to return all motif occurences in a sequence for which 
 PWM score exceeds the specified threshold:
 
-```java -cp ru.autosome.SARUS <sequences.multifasta> <weight.matrix> <threshold>```
+```java -cp sarus.jar ru.autosome.SARUS <sequences.multifasta> <weight.matrix> <threshold>```
 
 The arguments have self-speaking names.
 Sequences multi-FASTA and weight matrix are specified by corresponding filenames.
