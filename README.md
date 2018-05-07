@@ -115,6 +115,8 @@ sequence. There're two options overriding this behavior:
     Note that occurence coordinates can be outside of sequence! Occurence start
     can be even negative, occurence end can be higher than sequence length.
 
+**Please note, that all the options (except for filenames) should be given in lowercase letters.**
+
 ## Scores and P-values
 
 By default SPRY-SARUS reports for each occurence their PWM scores. Often it's
@@ -172,7 +174,7 @@ it's natural to output them - and these are defaults. But you can force
 SPRY-SARUS both to suppress sequence names output in default mode and
 not to suppress them in `BED`-format.
 
-**Please note, that all the options (except for filenames) should be given in lowercase letters.**
+**Please note, that output is not sorted (because of matches on different strands). Consider using *`bedtools sort`* before using tool output.**
 
 ## Output format
 The default output format is fairly simple showing the sequence header 
