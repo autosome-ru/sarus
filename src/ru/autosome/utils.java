@@ -34,11 +34,22 @@ public class utils {
             this.startPos = startPos;
         }
 
-        // `chr1:234` or `chr1:234-567` or `chr1:234..567` or `chr1:234-567,+`
+        // TERT_GBM::chr5:1295104-1295362 --> chr5:1295104-1295362
+        // chr16:85715965..85891755+ --> chr16:85715965..85891755+
+        public static String dropIntervalName(String annotation) {
+            int colonIdx = annotation.indexOf("::");
+            if (colonIdx != -1) {
+                return annotation.substring(colonIdx+2);
+            }
+            return annotation;
+        }
+
+        // `chr1:234` or `chr1:234-567` or `chr1:234..567` or `chr1:234-567,+` or `TERT_GBM::chr5:1295104-1295362`
+        // only first coordinate matter, second coordinate and strand are ignored
         public static IntervalStartCoordinate fromIntervalNotation(String annotation) {
             String chrName;
             int startPos;
-            annotation = annotation;
+            annotation = dropIntervalName(annotation);
             int colonIdx = annotation.indexOf(':');
             if (colonIdx != -1) {
                 chrName = annotation.substring(0, colonIdx);
