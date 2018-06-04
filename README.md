@@ -29,9 +29,9 @@ or in a shorter form
 
 ```java -jar sarus.jar```
 
-You may want to provide Java with more memory in case of large sequence sets, e.g.:
+You may want to provide Java with more memory in case of large sequence sets, e.g. 2 gigabytes:
 
-```java -Xmx1G -cp sarus.jar ru.autosome.SARUS <more parameters here>```
+```java -Xmx2G -cp sarus.jar ru.autosome.SARUS <more parameters here>```
 
 ### Using dinucleotide version
 
@@ -171,8 +171,8 @@ can be redefined using the `--motif-name NAME` option.
 In `bed` format it's natural not to output sequence names that belong to 
 different sequences of the multi-FASTA. In default output format (plain text)
 it's natural to output the names - this is the default behaviour. You can force
-SPRY-SARUS both to suppress sequence names output in default mode and
-not to suppress them in `BED`-format.
+SPRY-SARUS both to suppress sequence names output in default mode using `--suppress` and
+not to suppress them in `BED`-format using `--no-suppress`.
 
 **Please note, that output is not sorted (because of matches on different strands). Consider using *`bedtools sort`* before supplying the output to other bed-based tools.**
 
