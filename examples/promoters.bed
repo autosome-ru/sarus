@@ -1,0 +1,11 @@
+chr	start	end	Promoter	Associated Phenotype	Vector	Cell line 	Transf. time (hr)	Fold Change	Construct size (bp)
+chrX	138612623	138612923	F9	Hemophilia B	pGL4.11b	HepG2	24	2.6	300
+chr22	19710789	19711173	GP1BB	Bernard-Soulier Syndrome	pGL4.11b	HEL 92.1.7	24	22.1	384
+chr11	5248251	5248438	HBB	Thalassemia	pGL4.11b	HEL 92.1.7	24	14.3	187
+chr11	5271034	5271308	HBG1	Hereditary persistence of fetal hemoglobin	pGL4.11b	HEL 92.1.7	24	118.1	274
+chr20	42984159	42984444	HNF4A_P2	Maturity-onset diabetes of the young (MODY)	pGL4.11b	HEK293T	24	2.8	285
+chr19	11199906	11200224	LDLR	Familial hypercholesterolemia	pGL4.11b	HepG2	24	110.7	318
+chr10	51548987	51549578	MSMB	Prostate cancer	pGL4.11b	HEK293T	24	8.4	591
+chr1	155271186	155271655	PKLR	Pyruvate kinase deficiency	pGL4.11b	K562	48	29.4	469
+chr5	1295104	1295362	TERT_GBM	Various types of cancer	pGL4.11b	GBM	24	231.8	258
+chr5	1295104	1295362	TERT_HEK293T	Various types of cancer	pGL4.11b	HEK293T	24	231.8	258
