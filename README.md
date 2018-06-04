@@ -17,9 +17,8 @@ SPRY-SARUS has fairly simple command line format,
 accepts weight matrices in plain text files (with log-odds 
 or similarly transformed additive weights) and DNA sequences in multifasta. 
 
-SPRY-SARUS is written in Java (and requires Java 1.8 or more recent).
-The all-in-one jar files are available on the [ChIPMunk](http://autosome.ru/ChIPMunk/) web page.
-The [zip-file](http://autosome.ru/ChIPMunk/sarus_example.zip) with sample PWMs and sequences is also available for download.
+SPRY-SARUS is written in Java (and requires Java 1.8 or more recent). You can get it as the [jar file](https://raw.githubusercontent.com/VorontsovIE/sarus/master/releases/sarus-2.0.0.jar).
+You can experiment with sample PWMs and sequences in [examples](https://github.com/VorontsovIE/sarus/tree/master/examples) folder.
 
 The proper command line format is printed if SARUS is executed w/o arguments:
 
