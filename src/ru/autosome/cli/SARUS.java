@@ -43,9 +43,9 @@ public abstract class SARUS {
 
     public String helpString() {
         return "Usage:\n" +
-                "java -cp " + classNameHelp() + " <sequences.multifasta> <weight matrix> <threshold> [options]\n" +
+                "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> <threshold> [options]\n" +
                 "  or\n" +
-                "java -cp " + classNameHelp() + " <sequences.multifasta> <weight matrix> besthit [options]\n" +
+                "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> besthit [options]\n" +
                 "Options:\n" +
                 "  [--transpose] - use transposed PWM (rows correspond to " + rowContentHelp() + ", columns are positions)\n" +
                 "  [--pvalues-file FILE] - specify PWM score <--> P-value conversion.\n" +
@@ -58,7 +58,8 @@ public abstract class SARUS {
                 "                   `bedtools getfasta` generates headers in matching format\n" +
                 "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
                 "  [--direct|--revcomp] - scan only direct/revcomp strand of DNA\n" +
-                "  [--motif-name] - motif name goes in 4-th column in BED-6 format. By default is inferred from PWM filename\n" +
+                "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format)." +
+                "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides.\n" +
                 "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
                 "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
