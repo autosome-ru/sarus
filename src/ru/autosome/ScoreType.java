@@ -25,7 +25,15 @@ public enum ScoreType {
             } else {
                 throw new NotImplementedException();
             }
-            score = pvalueBsearchList.threshold_by_pvalue(pvalue);
+            if (pvalue < 1) {
+                score = pvalueBsearchList.threshold_by_pvalue(pvalue);
+            } else {
+                // Any score will be higher than -Inf
+                // It isn't enough to take worst_score from threshold-pvalue list
+                // because due to floating point errors, sometimes (e.g. in superalphabet)
+                // score can be a bit less than the worst score.
+                score = Double.NEGATIVE_INFINITY;
+            }
         }
         return score;
     }
