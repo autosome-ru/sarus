@@ -6,6 +6,8 @@ This is a simple tool which uses superalphabet approach
 presented by [Pizzi, Rastas & Ukkonen; 2007] to scan a given set 
 of sequences for (di)PWM hits scoring no less than a given threshold. 
 
+Current release: 2.0.2.
+
 ### Key features: 
 * provides bed + plain text output
 * supports both classic mono- and dinucleotide position weight matrices
@@ -17,7 +19,7 @@ SPRY-SARUS has fairly simple command line format,
 accepts weight matrices in plain text files (with log-odds 
 or similarly transformed additive weights) and DNA sequences in multifasta. 
 
-SPRY-SARUS is written in Java (and requires Java 1.8 or more recent). You can get it as the [jar file](https://raw.githubusercontent.com/VorontsovIE/sarus/master/releases/sarus-2.0.1.jar).
+SPRY-SARUS is written in Java (and requires Java 1.8 or more recent). You can get it as the [jar file](https://raw.githubusercontent.com/VorontsovIE/sarus/master/releases/sarus-2.0.2.jar).
 You can experiment with sample PWMs and sequences in [examples](https://github.com/VorontsovIE/sarus/tree/master/examples) folder.
 
 The proper command line format is printed if SARUS is executed w/o arguments:
