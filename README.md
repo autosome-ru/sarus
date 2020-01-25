@@ -190,3 +190,7 @@ so it is possible to redirect the result into a file:
 ```java -jar sarus.jar SP1_peaks.mfa SP1_example.pwm besthit > result.log```
 
 When `--output-bed` option is specified, the resulting output follows [BED-6 format specification](http://genome.ucsc.edu/FAQ/FAQformat#format1). The interval name is composed of the motif name and the sequence name separated by a semicolon, e.g.: `GATA1;chr1:100234-100567`.
+
+## Authors
+SPRY-SARUS was originally written by Nastya Denisenko and Ivan Kulakovskiy.
+At the moment it is maintained by Ilya Vorontsov.
