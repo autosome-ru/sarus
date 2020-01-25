@@ -58,7 +58,7 @@ public abstract class SARUS {
                 "                   `bedtools getfasta` generates headers in matching format\n" +
                 "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
                 "  [--direct|--revcomp] - scan only direct/revcomp strand of DNA\n" +
-                "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format)." +
+                "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format).\n" +
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides.\n" +
                 "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
