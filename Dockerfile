@@ -1,7 +1,7 @@
 FROM openjdk:jre-alpine
 COPY entrypoint.sh /entrypoint.sh
-COPY releases/sarus-2.0.1.jar /sarus.jar
-LABEL version="2.0.1"
+COPY releases/sarus-2.0.2.jar /sarus.jar
+LABEL version="2.0.2"
 WORKDIR /data
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["ru.autosome.SARUS", "--help"]
