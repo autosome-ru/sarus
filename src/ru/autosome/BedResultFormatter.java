@@ -33,7 +33,7 @@ public class BedResultFormatter implements ResultFormatter {
         }
         // it's not the same as format(Double.NEGATIVE_INFINITY, -1, "+") because of different interval boundaries
         // -1 not shifted to intervalStartPos; interval length is zero, not motif length
-        return intervalChromosome + "\t" + (-1) + "\t" + (-1) + "\t" + motifName + "\t" + scoreFormatter.formatScore(Double.NEGATIVE_INFINITY) + "\t" + "+";
+        return intervalChromosome + "\t" + (-1) + "\t" + (-1) + "\t" + motifName + "\t" + scoreFormatter.formatScore(Double.NEGATIVE_INFINITY) + "\t" + ".";
     }
 
     @Override
