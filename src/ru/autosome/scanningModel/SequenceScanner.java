@@ -8,7 +8,7 @@ import ru.autosome.motifModel.Motif;
 import java.util.function.Consumer;
 
 public abstract class SequenceScanner {
-    public abstract static class Builder<T extends Motif> {
+    public abstract static class Builder<T extends Motif<T>> {
         protected final boolean scanDirect, scanRevcomp;
         protected final T motif;
         Builder(T motif, boolean scanDirect, boolean scanRevcomp) {
