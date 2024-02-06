@@ -21,7 +21,9 @@ public class PWMScanner extends SequenceScanner {
         this.revcomp_motif = motif.revcomp();
         this.sequence = sequence;
     }
-
+    @Override int sequenceLength() {
+        return this.sequence.length();
+    }
     @Override double direct_score(int position) { return motif.score(sequence, position); }
     @Override double revcomp_score(int position) { return revcomp_motif.score(sequence, position); }
 

@@ -25,6 +25,11 @@ public class DPWMScanner extends SequenceScanner {
     @Override double direct_score(int position) { return motif.score(sequence, position); }
     @Override double revcomp_score(int position) { return revcomp_motif.score(sequence, position); }
 
+    @Override
+    int sequenceLength() {
+        return this.sequence.length();
+    }
+
     @Override public int scanningStartIndex() { return 0; }
     @Override public int scanningEndIndex() { return sequence.sequence.length - motif.matrix.length + 1; }
     @Override public int shiftForRevcompScore() { return 0; }

@@ -25,6 +25,11 @@ public class SuperAlphabetDPWMScanner extends SequenceScanner {
     @Override double direct_score(int position) { return motif.score(sequence, position); }
     @Override double revcomp_score(int position) { return revcomp_motif.score(sequence, position); }
 
+    @Override
+    int sequenceLength() {
+        return this.sequence.length();
+    }
+
     @Override public int scanningStartIndex() { return 1; }
     @Override public int scanningEndIndex() {
         if (motif.motif_length() % 2 == 0) {

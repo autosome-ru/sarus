@@ -29,6 +29,7 @@ public abstract class SequenceScanner {
     abstract double direct_score(int position);
     abstract double revcomp_score(int position);
 
+    abstract int sequenceLength();
     abstract int scanningStartIndex();
     abstract int scanningEndIndex();
     abstract int shiftForRevcompScore();
