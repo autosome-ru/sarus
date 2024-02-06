@@ -8,6 +8,9 @@ public class DSequence {
         this.sequence = sequence;
     }
 
+    public int length() {
+        return this.sequence.length + 1;
+    }
     public static DSequence sequenceFromString(String str) {
         int length = str.length();
         byte[] genome = new byte[length - 1];

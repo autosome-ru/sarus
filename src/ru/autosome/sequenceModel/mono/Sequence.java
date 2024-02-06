@@ -7,6 +7,9 @@ public class Sequence {
     Sequence(byte[] sequence) {
         this.sequence = sequence;
     }
+    public int length() {
+        return sequence.length;
+    }
 
     public static Sequence sequenceFromString(String str) {
         int length = str.length();

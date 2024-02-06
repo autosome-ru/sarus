@@ -8,6 +8,10 @@ public class SuperAlphabetSequence {
         this.sequence = sequence;
     }
 
+    public int length() {
+        return sequence.length - 1;
+    }
+
     public static SuperAlphabetSequence sequenceFromString(String str) {
         int length = str.length();
         byte[] genome = new byte[length + 1];
