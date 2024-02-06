@@ -151,8 +151,9 @@ public class Assistant {
         int numCols = rows.get(0).length;
         double[][] matrix = new double[rows.size()][numCols];
         for (int i = 0; i < rows.size(); ++i) {
-            for (int j = 0; j < numCols; ++j)
-            matrix[i][j] = rows.get(i)[j];
+            for (int j = 0; j < numCols; ++j) {
+                matrix[i][j] = rows.get(i)[j];
+            }
         }
         return matrix;
     }
