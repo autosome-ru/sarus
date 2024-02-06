@@ -37,6 +37,12 @@ public class BedResultFormatter implements ResultFormatter {
     }
 
     @Override
+    public String formatOccupancy(double occupancy, int seqLength) {
+        int intervalEndPos = intervalStartPos + seqLength;
+        return intervalChromosome + "\t" + intervalStartPos + "\t" + intervalEndPos + "\t" + motifName + "\t" + scoreFormatter.formatScore(occupancy) + "\t" + ".";
+    }
+
+    @Override
     public boolean shouldOutputNoMatch() {
         return outputNoMatch;
     }

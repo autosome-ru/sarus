@@ -21,6 +21,10 @@ public class SarusResultFormatter implements ResultFormatter {
         return scoreFormatter.formatScore(score) + "\t" + (pos_start - getFlankLength()) + "\t" + strand;
     }
 
+    public String formatOccupancy(double occupancy, int seqLength) {
+        return scoreFormatter.decimalFormat.format(occupancy);
+    }
+
     @Override
     public String formatNoMatch() {
         if (!shouldOutputNoMatch()) {
