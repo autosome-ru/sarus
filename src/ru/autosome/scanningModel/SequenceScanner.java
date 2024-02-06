@@ -1,6 +1,6 @@
 package ru.autosome.scanningModel;
 
-import ru.autosome.Occurence;
+import ru.autosome.Occurrence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
 import ru.autosome.motifModel.Motif;
@@ -35,8 +35,8 @@ public abstract class SequenceScanner {
     abstract int shiftForRevcompScore();
     abstract int shiftForPrint();
 
-    private void internalScanCallback(Consumer<Occurence> consumer) {
-        Occurence current = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
+    private void internalScanCallback(Consumer<Occurrence> consumer) {
+        Occurrence current = new Occurrence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
         if (scanDirect) {
             for (int i = scanningStartIndex(); i < scanningEndIndex(); i++) {
                 current.replace(direct_score(i), i, Strand.direct);
@@ -52,11 +52,11 @@ public abstract class SequenceScanner {
     }
 
     public void scan(double threshold, ResultFormatter formatter) {
-        internalScanCallback(occurence -> {
-            if (occurence.goodEnough(threshold)) {
-                String occurence_info = formatter.format(occurence.score,
-                        occurence.pos + shiftForPrint(), occurence.strand.shortSign());
-                System.out.println(occurence_info);
+        internalScanCallback(occurrence -> {
+            if (occurrence.goodEnough(threshold)) {
+                String occurrence_info = formatter.format(occurrence.score,
+                        occurrence.pos + shiftForPrint(), occurrence.strand.shortSign());
+                System.out.println(occurrence_info);
             }
         });
 
@@ -70,10 +70,12 @@ public abstract class SequenceScanner {
             return;
         }
 
-        Occurence bestOccurence = new Occurence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
-        internalScanCallback(occurence -> bestOccurence.replaceIfBetter(occurence));
+        Occurrence bestOccurrence = new Occurrence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
+        internalScanCallback(occurrence -> bestOccurrence.replaceIfBetter(occurrence));
 
-        String occurence_info = formatter.format(bestOccurence.score, bestOccurence.pos + shiftForPrint(), bestOccurence.strand.shortSign());
-        System.out.println(occurence_info);
+        String occurrence_info = formatter.format(bestOccurrence.score, bestOccurrence.pos + shiftForPrint(), bestOccurrence.strand.shortSign());
+        System.out.println(occurrence_info);
     }
+
+
 }

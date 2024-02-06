@@ -180,7 +180,7 @@ not to suppress them in `BED`-format using `--no-suppress`.
 ## Output format
 The default output format is fairly simple showing the sequence header 
 (via `>` as in the input multifasta file), 
-the PWM score, the position and the strand orientation of the motif occurence.
+the PWM score, the position and the strand orientation of the motif occurrence.
 
 An example of the command line (based on example data from the webpage):
 

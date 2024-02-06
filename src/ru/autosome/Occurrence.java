@@ -1,11 +1,11 @@
 package ru.autosome;
 
-public class Occurence {
+public class Occurrence {
     public double score;
     public int pos;
     public Strand strand;
 
-    public Occurence(double score, int pos, Strand strand) {
+    public Occurrence(double score, int pos, Strand strand) {
         this.score = score;
         this.pos = pos;
         this.strand = strand;
@@ -25,8 +25,8 @@ public class Occurence {
         return false;
     }
 
-    public boolean replaceIfBetter(Occurence occurence) {
-        return replaceIfBetter(occurence.score, occurence.pos, occurence.strand);
+    public boolean replaceIfBetter(Occurrence occurrence) {
+        return replaceIfBetter(occurrence.score, occurrence.pos, occurrence.strand);
     }
 
     public boolean goodEnough(double threshold) {
