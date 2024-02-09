@@ -2,11 +2,12 @@ package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
 
-public class Sequence {
+public class Sequence implements ru.autosome.sequenceModel.AbstractSequence {
     public final byte[] sequence;
     Sequence(byte[] sequence) {
         this.sequence = sequence;
     }
+    @Override
     public int length() {
         return sequence.length;
     }
