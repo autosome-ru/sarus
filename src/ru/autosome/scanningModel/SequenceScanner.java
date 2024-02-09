@@ -3,13 +3,15 @@ package ru.autosome.scanningModel;
 import ru.autosome.Occurrence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
+import ru.autosome.sequenceModel.AbstractSequence;
 
 import java.util.function.Consumer;
 
-public abstract class SequenceScanner {
-
+public abstract class SequenceScanner<S extends AbstractSequence> {
+    protected final S sequence;
     private final boolean scanDirect, scanRevcomp;
-    SequenceScanner(boolean scanDirect, boolean scanRevcomp) {
+    SequenceScanner(S sequence, boolean scanDirect, boolean scanRevcomp) {
+        this.sequence = sequence;
         this.scanDirect = scanDirect;
         this.scanRevcomp = scanRevcomp;
     }
@@ -17,11 +19,13 @@ public abstract class SequenceScanner {
     abstract double direct_score(int position);
     abstract double revcomp_score(int position);
 
-    abstract int sequenceLength();
     abstract int scanningStartIndex();
     abstract int scanningEndIndex();
     abstract int shiftForRevcompScore();
     abstract int shiftForPrint();
+    int sequenceLength() {
+        return this.sequence.length();
+    }
 
     private void internalScanCallback(Consumer<Occurrence> consumer) {
         Occurrence current = new Occurrence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
