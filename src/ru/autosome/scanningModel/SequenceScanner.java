@@ -3,23 +3,10 @@ package ru.autosome.scanningModel;
 import ru.autosome.Occurrence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
-import ru.autosome.motifModel.Motif;
-import ru.autosome.sequenceModel.AbstractSequence;
 
 import java.util.function.Consumer;
 
 public abstract class SequenceScanner {
-    public abstract static class Builder<T extends Motif<T, ?>> {
-        protected final boolean scanDirect, scanRevcomp;
-        protected final T motif;
-        Builder(T motif, boolean scanDirect, boolean scanRevcomp) {
-            this.motif = motif;
-            this.scanDirect = scanDirect;
-            this.scanRevcomp = scanRevcomp;
-        }
-        public T getMotif() { return motif; }
-        public abstract SequenceScanner scannerForSequence(String str);
-    }
 
     private final boolean scanDirect, scanRevcomp;
     SequenceScanner(boolean scanDirect, boolean scanRevcomp) {

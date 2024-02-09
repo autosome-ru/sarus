@@ -1,6 +1,7 @@
 package ru.autosome.cli;
 
 import ru.autosome.*;
+import ru.autosome.scanningModel.builder.SequenceScannerBuilder;
 import ru.autosome.scanningModel.SequenceScanner;
 
 import java.io.File;
@@ -69,7 +70,7 @@ public abstract class SARUS {
                 "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
     }
 
-    abstract public SequenceScanner.Builder makeScannerBuilder() throws IOException;
+    abstract public SequenceScannerBuilder makeScannerBuilder() throws IOException;
 
     public void setupFromArglist(ArrayList<String> argsList) throws IOException {
         if (argsList.contains("-h") || argsList.contains("--help")) {
@@ -199,7 +200,7 @@ public abstract class SARUS {
     }
 
     public void run() throws IOException {
-        SequenceScanner.Builder builder = makeScannerBuilder();
+        SequenceScannerBuilder builder = makeScannerBuilder();
         int motifLength = builder.getMotif().motif_length();
         int flankLength = addFlanks ? motifLength : 0;
         ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching, flankLength);

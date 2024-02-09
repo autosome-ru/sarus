@@ -4,15 +4,6 @@ import ru.autosome.motifModel.di.SuperAlphabetDPWM;
 import ru.autosome.sequenceModel.di.SuperAlphabetDSequence;
 
 public class SuperAlphabetDPWMScanner extends SequenceScanner {
-    public static class Builder extends SequenceScanner.Builder<SuperAlphabetDPWM> {
-        public Builder(SuperAlphabetDPWM motif, boolean scanDirect, boolean scanRevcomp) {
-            super(motif, scanDirect, scanRevcomp);
-        }
-        public SuperAlphabetDPWMScanner scannerForSequence(String str)  {
-            return new SuperAlphabetDPWMScanner(motif, SuperAlphabetDSequence.sequenceFromString(str), scanDirect, scanRevcomp);
-        }
-    }
-
     private final SuperAlphabetDPWM motif, revcomp_motif;
     private final SuperAlphabetDSequence sequence;
     public SuperAlphabetDPWMScanner(SuperAlphabetDPWM motif, SuperAlphabetDSequence sequence, boolean scanDirect, boolean scanRevcomp) {

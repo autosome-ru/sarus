@@ -4,15 +4,6 @@ import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.sequenceModel.di.DSequence;
 
 public class DPWMScanner extends SequenceScanner {
-    public static class Builder extends SequenceScanner.Builder<DPWM> {
-        public Builder(DPWM motif, boolean scanDirect, boolean scanRevcomp) {
-            super(motif, scanDirect, scanRevcomp);
-        }
-        public DPWMScanner scannerForSequence(String str) {
-            return new DPWMScanner(motif, DSequence.sequenceFromString(str), scanDirect, scanRevcomp);
-        }
-    }
-
     private final DPWM motif, revcomp_motif;
     private final DSequence sequence;
     public DPWMScanner(DPWM motif, DSequence sequence, boolean scanDirect, boolean scanRevcomp) {
