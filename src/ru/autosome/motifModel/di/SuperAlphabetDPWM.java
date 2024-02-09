@@ -1,12 +1,12 @@
 package ru.autosome.motifModel.di;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.Motif;
+import ru.autosome.motifModel.DiMotif;
 import ru.autosome.sequenceModel.di.SuperAlphabetDSequence;
 
 import static ru.autosome.utils.with_zero_row;
 
-public class SuperAlphabetDPWM implements Motif<SuperAlphabetDPWM> {
+public class SuperAlphabetDPWM implements DiMotif<SuperAlphabetDPWM, SuperAlphabetDSequence> {
     public final double[][] matrix;
     private final int motifLength;
     SuperAlphabetDPWM(double[][] matrix, int motifLength) {

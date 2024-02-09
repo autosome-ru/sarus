@@ -1,13 +1,15 @@
 package ru.autosome.sequenceModel.di;
 
 import ru.autosome.Assistant;
+import ru.autosome.sequenceModel.AbstractSequence;
 
-public class SuperAlphabetDSequence {
+public class SuperAlphabetDSequence implements AbstractSequence {
     public final byte[] sequence;
     SuperAlphabetDSequence(byte[] sequence) {
         this.sequence = sequence;
     }
 
+    @Override
     public int length() {
         return this.sequence.length;
     }

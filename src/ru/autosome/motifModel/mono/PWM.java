@@ -1,7 +1,7 @@
 package ru.autosome.motifModel.mono;
 
 import ru.autosome.Assistant;
-import ru.autosome.motifModel.Motif;
+import ru.autosome.motifModel.MonoMotif;
 import ru.autosome.sequenceModel.mono.Sequence;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static ru.autosome.Assistant.listDoubleRowsToMatrix;
 
-public class PWM implements Motif<PWM> {
+public class PWM implements MonoMotif<PWM, Sequence> {
     public final double[][] matrix;
     PWM(double[][] matrix) {
         this.matrix = matrix;

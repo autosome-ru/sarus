@@ -1,13 +1,15 @@
 package ru.autosome.sequenceModel.mono;
 
 import ru.autosome.Assistant;
+import ru.autosome.sequenceModel.AbstractSequence;
 
-public class SuperAlphabetSequence {
+public class SuperAlphabetSequence implements AbstractSequence {
     public final byte[] sequence;
     SuperAlphabetSequence(byte[] sequence) {
         this.sequence = sequence;
     }
 
+    @Override
     public int length() {
         return sequence.length - 1;
     }
