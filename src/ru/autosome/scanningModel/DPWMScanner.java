@@ -3,12 +3,9 @@ package ru.autosome.scanningModel;
 import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.sequenceModel.di.DSequence;
 
-public class DPWMScanner extends SequenceScanner<DSequence> {
-    private final DPWM motif, revcomp_motif;
+public class DPWMScanner extends SequenceScanner<DPWM, DSequence> {
     public DPWMScanner(DPWM motif, DSequence sequence, boolean scanDirect, boolean scanRevcomp) {
-        super(sequence, scanDirect, scanRevcomp);
-        this.motif = motif;
-        this.revcomp_motif = motif.revcomp();
+        super(motif, sequence, scanDirect, scanRevcomp);
     }
 
     @Override double direct_score(int position) { return motif.score(sequence, position); }

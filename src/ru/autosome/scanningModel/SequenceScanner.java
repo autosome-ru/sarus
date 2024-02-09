@@ -3,14 +3,19 @@ package ru.autosome.scanningModel;
 import ru.autosome.Occurrence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
+import ru.autosome.motifModel.Motif;
+import ru.autosome.motifModel.mono.PWM;
 import ru.autosome.sequenceModel.AbstractSequence;
 
 import java.util.function.Consumer;
 
-public abstract class SequenceScanner<S extends AbstractSequence> {
+public abstract class SequenceScanner<M extends Motif<M, S>, S extends AbstractSequence> {
+    protected final M motif, revcomp_motif;
     protected final S sequence;
     private final boolean scanDirect, scanRevcomp;
-    SequenceScanner(S sequence, boolean scanDirect, boolean scanRevcomp) {
+    SequenceScanner(M motif, S sequence, boolean scanDirect, boolean scanRevcomp) {
+        this.motif = motif;
+        this.revcomp_motif = motif.revcomp();
         this.sequence = sequence;
         this.scanDirect = scanDirect;
         this.scanRevcomp = scanRevcomp;

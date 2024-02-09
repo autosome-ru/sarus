@@ -3,12 +3,9 @@ package ru.autosome.scanningModel;
 import ru.autosome.motifModel.mono.SuperAlphabetPWM;
 import ru.autosome.sequenceModel.mono.SuperAlphabetSequence;
 
-public class SuperAlphabetPWMScanner extends SequenceScanner<SuperAlphabetSequence> {
-    private final SuperAlphabetPWM motif, revcomp_motif;
+public class SuperAlphabetPWMScanner extends SequenceScanner<SuperAlphabetPWM, SuperAlphabetSequence> {
     public SuperAlphabetPWMScanner(SuperAlphabetPWM motif, SuperAlphabetSequence sequence, boolean scanDirect, boolean scanRevcomp) {
-        super(sequence, scanDirect, scanRevcomp);
-        this.motif = motif;
-        this.revcomp_motif = motif.revcomp();
+        super(motif, sequence, scanDirect, scanRevcomp);
     }
 
     @Override double direct_score(int position) { return motif.score(sequence, position); }
