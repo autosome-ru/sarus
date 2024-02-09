@@ -1,7 +1,6 @@
 package ru.autosome.cli;
 
 import ru.autosome.*;
-import ru.autosome.scanningModel.builder.SequenceScannerBuilder;
 import ru.autosome.scanningModel.SequenceScanner;
 
 import java.io.File;
@@ -41,6 +40,9 @@ public abstract class SARUS {
     public abstract String rowContentHelp();
 
     public abstract String precalculateThresholdsPkgHelp();
+    protected abstract void loadMotif() throws IOException;
+    public abstract int motif_length();
+    public abstract SequenceScanner makeScanner(String str);
 
     public String helpString() {
         return "Usage:\n" +
@@ -69,8 +71,6 @@ public abstract class SARUS {
                 "                   Note that in this mode site can be outside of sequence (coordinates can be even negative).\n" +
                 "  [--show-non-matching] - Output fictive result for besthit when motif is wider than sequence\n";
     }
-
-    abstract public SequenceScannerBuilder makeScannerBuilder() throws IOException;
 
     public void setupFromArglist(ArrayList<String> argsList) throws IOException {
         if (argsList.contains("-h") || argsList.contains("--help")) {
@@ -197,11 +197,12 @@ public abstract class SARUS {
             this.lookForBestHit = false;
             this.threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(thresholdOrBesthit), pvalueBsearchList);
         }
+
+        loadMotif();
     }
 
     public void run() throws IOException {
-        SequenceScannerBuilder builder = makeScannerBuilder();
-        int motifLength = builder.getMotif().motif_length();
+        int motifLength = motif_length();
         int flankLength = addFlanks ? motifLength : 0;
         ResultFormatter sarusFormatter = new SarusResultFormatter(scoreFormatter, show_non_matching, flankLength);
         String flank = utils.polyN_flank(flankLength);
@@ -220,7 +221,7 @@ public abstract class SARUS {
                 System.out.println(">" + namedSequence.getName());
             }
 
-            SequenceScanner scanner = builder.scannerForSequence(flank + namedSequence.getSequence() + flank);
+            SequenceScanner<?, ?> scanner = makeScanner(flank + namedSequence.getSequence() + flank);
 
             if (lookForBestHit) {
                 scanner.bestHit(formatter);

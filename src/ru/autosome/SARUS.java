@@ -2,15 +2,27 @@ package ru.autosome;
 
 import ru.autosome.motifModel.mono.PWM;
 import ru.autosome.motifModel.mono.SuperAlphabetPWM;
-import ru.autosome.scanningModel.builder.PWMSequenceScannerBuilder;
-import ru.autosome.scanningModel.builder.SequenceScannerBuilder;
-import ru.autosome.scanningModel.builder.SuperAlphabetPWMSequenceScannerBuilder;
+import ru.autosome.scanningModel.PWMScanner;
+import ru.autosome.scanningModel.SequenceScanner;
+import ru.autosome.scanningModel.SuperAlphabetPWMScanner;
+import ru.autosome.sequenceModel.mono.Sequence;
+import ru.autosome.sequenceModel.mono.SuperAlphabetSequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SARUS extends ru.autosome.cli.SARUS {
+    protected PWM motif;
+    protected SuperAlphabetPWM motifSA;
+
+    @Override
+    protected void loadMotif() throws IOException {
+        this.motif = PWM.readMPWM(pwm_filename, N_isPermitted, transpose);
+        this.motifSA = SuperAlphabetPWM.fromNaive(this.motif);
+    }
+
+    @Override public int motif_length() { return this.motif.motif_length(); }
 
     @Override
     public String classNameHelp() {
@@ -30,13 +42,13 @@ public class SARUS extends ru.autosome.cli.SARUS {
     SARUS() {
     }
 
-    @Override
-    public SequenceScannerBuilder makeScannerBuilder() throws IOException {
-        PWM motif = PWM.readMPWM(pwm_filename, N_isPermitted, transpose);
+    @Override public SequenceScanner<?, ?> makeScanner(String str) {
         if (naive) {
-            return new PWMSequenceScannerBuilder(motif, scanDirect, scanRevcomp);
+            Sequence sequence = Sequence.sequenceFromString(str);
+            return new PWMScanner(this.motif, sequence, scanDirect, scanRevcomp);
         } else {
-            return new SuperAlphabetPWMSequenceScannerBuilder(SuperAlphabetPWM.fromNaive(motif), scanDirect, scanRevcomp);
+            SuperAlphabetSequence sequenceSA = SuperAlphabetSequence.sequenceFromString(str);
+            return new SuperAlphabetPWMScanner(this.motifSA, sequenceSA, scanDirect, scanRevcomp);
         }
     }
 

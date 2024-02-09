@@ -2,16 +2,28 @@ package ru.autosome.di;
 
 import ru.autosome.motifModel.di.DPWM;
 import ru.autosome.motifModel.di.SuperAlphabetDPWM;
-import ru.autosome.scanningModel.builder.DPWMSequenceScannerBuilder;
-import ru.autosome.scanningModel.builder.SequenceScannerBuilder;
 import ru.autosome.scanningModel.DPWMScanner;
-import ru.autosome.scanningModel.builder.SuperAlphabetDPWMSequenceScannerBuilder;
+import ru.autosome.scanningModel.SequenceScanner;
+import ru.autosome.scanningModel.SuperAlphabetDPWMScanner;
+import ru.autosome.sequenceModel.di.DSequence;
+import ru.autosome.sequenceModel.di.SuperAlphabetDSequence;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SARUS extends ru.autosome.cli.SARUS {
+    protected DPWM motif;
+    protected SuperAlphabetDPWM motifSA;
+
+    @Override
+    protected void loadMotif() throws IOException {
+        this.motif = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
+        this.motifSA = SuperAlphabetDPWM.fromNaive(this.motif);
+    }
+
+    @Override public int motif_length() { return this.motif.motif_length(); }
+
     @Override
     public String classNameHelp() {
         return "ru.autosome.di.SARUS";
@@ -30,15 +42,16 @@ public class SARUS extends ru.autosome.cli.SARUS {
     SARUS() {
     }
 
-    @Override
-    public SequenceScannerBuilder makeScannerBuilder() throws IOException {
-        DPWM motif = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
+    @Override public SequenceScanner<?, ?> makeScanner(String str) {
         if (naive) {
-            return new DPWMSequenceScannerBuilder(motif, scanDirect, scanRevcomp);
+            DSequence sequence = DSequence.sequenceFromString(str);
+            return new DPWMScanner(this.motif, sequence, scanDirect, scanRevcomp);
         } else {
-            return new SuperAlphabetDPWMSequenceScannerBuilder(SuperAlphabetDPWM.fromNaive(motif), scanDirect, scanRevcomp);
+            SuperAlphabetDSequence sequenceSA = SuperAlphabetDSequence.sequenceFromString(str);
+            return new SuperAlphabetDPWMScanner(this.motifSA, sequenceSA, scanDirect, scanRevcomp);
         }
     }
+
 
     public static void main(String[] args) throws IOException {
         ru.autosome.di.SARUS cli = new ru.autosome.di.SARUS();
