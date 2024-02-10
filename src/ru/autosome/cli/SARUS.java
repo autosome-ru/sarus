@@ -1,7 +1,9 @@
 package ru.autosome.cli;
 
 import ru.autosome.*;
-import ru.autosome.scanningModel.SequenceScanner;
+import ru.autosome.motifModel.mono.PFM;
+import ru.autosome.scanningModel.*;
+import ru.autosome.sequenceModel.mono.Sequence;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,10 +29,12 @@ public abstract class SARUS {
     protected boolean addFlanks;
 
     protected String fasta_filename;
-    protected String pwm_filename;
-    protected String thresholdOrBesthit;
+    protected String motif_filename;
+    protected String modeOrThreshold;
     protected boolean lookForBestHit;
+    protected boolean lookForSumOccupancy;
     protected Double threshold;
+    protected Double pfmPseudocount;
 
     protected boolean scanDirect, scanRevcomp;
     protected ScoreFormatter scoreFormatter;
@@ -49,6 +53,8 @@ public abstract class SARUS {
                 "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> <threshold> [options]\n" +
                 "  or\n" +
                 "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> besthit [options]\n" +
+                "  or\n" +
+                "java -cp " + classNameHelp() + " <sequences.multifasta> <frequency.matrix> pfm-sum-occupancy [options]\n" +
                 "Options:\n" +
                 "  [--transpose] - use transposed PWM (rows correspond to " + rowContentHelp() + ", columns are positions)\n" +
                 "  [--pvalues-file FILE] - specify PWM score <--> P-value conversion.\n" +
@@ -64,6 +70,7 @@ public abstract class SARUS {
                 "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format).\n" +
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides.\n" +
+                "  [--pfm-pseudocount] - Add pseudocount to PFM frequencies.\n" +
                 "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
                 "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
                 "  [--add-flanks] - Add polyN-flanks to sequences so that long motif could match short sequence.\n" +
@@ -93,6 +100,8 @@ public abstract class SARUS {
         this.outputAsBed = false;
         this.motifName = null;
         this.show_non_matching = false;
+
+        this.pfmPseudocount = 0.0;
 
         if (argsList.contains("--output-scoring-mode")) {
             int arg_index = argsList.indexOf("--output-scoring-mode");
@@ -126,6 +135,12 @@ public abstract class SARUS {
         if (argsList.contains("--precision")) {
             int arg_index = argsList.indexOf("--precision");
             this.precision = Integer.valueOf(argsList.remove(arg_index + 1));
+            argsList.remove(arg_index);
+        }
+
+        if (argsList.contains("--pfm-pseudocount")) {
+            int arg_index = argsList.indexOf("--pfm-pseudocount");
+            this.pfmPseudocount = Double.valueOf(argsList.remove(arg_index + 1));
             argsList.remove(arg_index);
         }
 
@@ -169,10 +184,10 @@ public abstract class SARUS {
         }
 
         this.fasta_filename = argsList.get(0);
-        this.pwm_filename = argsList.get(1);
-        this.thresholdOrBesthit = argsList.get(2);
+        this.motif_filename = argsList.get(1);
+        this.modeOrThreshold = argsList.get(2);
         if (motifName == null) {
-            this.motifName = utils.fileBasename(pwm_filename);
+            this.motifName = utils.fileBasename(motif_filename);
         }
 
         this.scoreFormatter = new ScoreFormatter(precision, outputScoringModel, pvalueBsearchList);
@@ -187,11 +202,14 @@ public abstract class SARUS {
             scanDirect = false;
         }
 
-        if (thresholdOrBesthit.matches("besthit")) {
+        this.lookForBestHit = false;
+        this.lookForSumOccupancy = false;
+        if (modeOrThreshold.matches("besthit")) {
             this.lookForBestHit = true;
+        } else if (modeOrThreshold.matches("pfm-sum-occupancy")) {
+            this.lookForSumOccupancy = true;
         } else {
-            this.lookForBestHit = false;
-            this.threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(thresholdOrBesthit), pvalueBsearchList);
+            this.threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(modeOrThreshold), pvalueBsearchList);
         }
 
         loadMotif();
@@ -218,12 +236,26 @@ public abstract class SARUS {
             }
 
             String flankedSequence = flank + namedSequence.getSequence() + flank;
-            SequenceScanner<?, ?> scanner = makeScanner(flankedSequence);
 
-            if (lookForBestHit) {
-                scanner.bestHit(formatter);
+            if (lookForSumOccupancy) {
+                PFM motif = PFM.readMPFM(motif_filename, N_isPermitted, pfmPseudocount, transpose);
+                if (naive) {
+                    Sequence sequence = Sequence.sequenceFromString(flankedSequence);
+                    PFMOccupancyScanner scanner = new PFMOccupancyScanner(motif, sequence, scanDirect, scanRevcomp);
+                    SumOccupancyCollector sumCollector = new SumOccupancyCollector();
+                    scanner.processAllPositions(sumCollector);
+                    System.out.println(sumCollector.getSum());
+                } else {
+                    throw new IllegalArgumentException("Only naive algorithm is implemented for PPM occupancy");
+                }
+
             } else {
-                scanner.scan(threshold, formatter);
+                SequenceScanner<?, ?> scanner = makeScanner(flankedSequence);
+                if (lookForBestHit) {
+                    scanner.bestHit(formatter);
+                } else {
+                    scanner.scan(threshold, formatter);
+                }
             }
         }
     }

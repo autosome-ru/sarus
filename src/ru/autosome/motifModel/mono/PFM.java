@@ -16,6 +16,7 @@ public class PFM implements Motif<PFM, Sequence> {
         this.matrix = matrix;
     }
 
+    // works with N × 4 matrices, not with N × 5
     @Override
     public double score(Sequence seq, int position) {
         double score = 1.0;
@@ -26,14 +27,28 @@ public class PFM implements Motif<PFM, Sequence> {
         return score;
     }
 
+    public static double[][] normalizeMatrix(double[][] matrix) {
+        double[][] result = new double[matrix.length][4];
+        for (int i = 0; i < matrix.length; i++) {
+            double sum = 0.0;
+            for (int letter = 0; letter < 4; ++letter) {
+                sum += matrix[i][letter];
+            }
+            for (int letter = 0; letter < 4; ++letter) {
+                result[i][letter] = matrix[i][letter] / sum;
+            }
+        }
+        return result;
+    }
+
+    // works with N × 4 matrices, not with N × 5
     public static double[][] withPseudocount(double[][] matrix, double pseudocount) {
-        double[][] result = new double[matrix.length][5];
+        double[][] result = new double[matrix.length][4];
         for (int i = 0; i < matrix.length; i++) {
             double sum = 0.0;
             for (int letter = 0; letter < 4; ++letter) {
                 result[i][letter] = (matrix[i][letter] + pseudocount) / (1 + 4 * pseudocount);
             }
-            result[i][4] = matrix[i][4];
         }
         return result;
     }
@@ -41,7 +56,6 @@ public class PFM implements Motif<PFM, Sequence> {
     public static double[][] matrixAcceptingN(double[][] matrix, boolean N_isPermitted) {
         double[][] result = new double[matrix.length][5];
         for (int i = 0; i < matrix.length; i++) {
-            double sum = 0.0;
             for (int letter = 0; letter < 4; ++letter) {
                 result[i][letter] = matrix[i][letter];
             }
@@ -54,7 +68,7 @@ public class PFM implements Motif<PFM, Sequence> {
         ArrayList<String> strings = Assistant.load(path);
         ArrayList<Double[]> parsed = Assistant.parseMono(strings, transpose);
         double[][] matrix = listDoubleRowsToMatrix(parsed);
-        return new PFM(matrixAcceptingN(withPseudocount(matrix, pseudocount), N_isPermitted));
+        return new PFM(matrixAcceptingN(withPseudocount(normalizeMatrix(matrix), pseudocount), N_isPermitted));
     }
 
     @Override

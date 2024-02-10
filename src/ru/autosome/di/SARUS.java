@@ -18,7 +18,7 @@ public class SARUS extends ru.autosome.cli.SARUS {
 
     @Override
     protected void loadMotif() throws IOException {
-        this.motif = DPWM.readDPWM(pwm_filename, N_isPermitted, transpose);
+        this.motif = DPWM.readDPWM(motif_filename, N_isPermitted, transpose);
         this.motifSA = SuperAlphabetDPWM.fromNaive(this.motif);
     }
 
