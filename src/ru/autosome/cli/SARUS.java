@@ -217,7 +217,8 @@ public abstract class SARUS {
                 System.out.println(">" + namedSequence.getName());
             }
 
-            SequenceScanner<?, ?> scanner = makeScanner(flank + namedSequence.getSequence() + flank);
+            String flankedSequence = flank + namedSequence.getSequence() + flank;
+            SequenceScanner<?, ?> scanner = makeScanner(flankedSequence);
 
             if (lookForBestHit) {
                 scanner.bestHit(formatter);

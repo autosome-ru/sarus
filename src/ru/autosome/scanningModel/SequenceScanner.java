@@ -31,7 +31,7 @@ public abstract class SequenceScanner<M extends Motif<M, S>, S extends AbstractS
         return this.sequence.length();
     }
 
-    private void internalScanCallback(Consumer<Occurrence> consumer) {
+    public void processAllPositions(Consumer<Occurrence> consumer) {
         Occurrence current = new Occurrence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
         if (scanDirect) {
             for (int i = scanningStartIndex(); i < scanningEndIndex(); i++) {
@@ -48,7 +48,7 @@ public abstract class SequenceScanner<M extends Motif<M, S>, S extends AbstractS
     }
 
     public void scan(double threshold, ResultFormatter formatter) {
-        internalScanCallback(occurrence -> {
+        processAllPositions(occurrence -> {
             if (occurrence.goodEnough(threshold)) {
                 String occurrence_info = formatter.format(occurrence.score,
                         occurrence.pos + shiftForPrint(), occurrence.strand.shortSign());
@@ -67,7 +67,7 @@ public abstract class SequenceScanner<M extends Motif<M, S>, S extends AbstractS
         }
 
         Occurrence bestOccurrence = new Occurrence(Double.NEGATIVE_INFINITY, 0, Strand.direct);
-        internalScanCallback(occurrence -> bestOccurrence.replaceIfBetter(occurrence));
+        processAllPositions(occurrence -> bestOccurrence.replaceIfBetter(occurrence));
 
         String occurrence_info = formatter.format(bestOccurrence.score, bestOccurrence.pos + shiftForPrint(), bestOccurrence.strand.shortSign());
         System.out.println(occurrence_info);
