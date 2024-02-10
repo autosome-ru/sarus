@@ -56,7 +56,7 @@ public class PWM implements MonoMotif<PWM, Sequence> {
     }
 
     @Override
-    public int motif_length() {
+    public int length() {
         return this.matrix.length;
     }
 

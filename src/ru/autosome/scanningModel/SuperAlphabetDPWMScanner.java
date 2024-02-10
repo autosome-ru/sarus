@@ -13,14 +13,14 @@ public class SuperAlphabetDPWMScanner extends SequenceScanner<SuperAlphabetDPWM,
 
     @Override public int scanningStartIndex() { return 1; }
     @Override public int scanningEndIndex() {
-        if (motif.motif_length() % 2 == 0) {
+        if (motif.length() % 2 == 0) {
             return sequence.sequence.length - 2 * motif.matrix.length + 2;
         } else {
             return sequence.sequence.length - 2 * motif.matrix.length + 1;
         }
     }
     @Override public int shiftForRevcompScore() {
-        if (motif.motif_length() % 2 == 0) {
+        if (motif.length() % 2 == 0) {
             return -1;
         } else {
             return 0;

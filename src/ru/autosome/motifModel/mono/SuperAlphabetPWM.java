@@ -24,7 +24,7 @@ public class SuperAlphabetPWM implements MonoMotif<SuperAlphabetPWM, SuperAlphab
     }
 
     public static SuperAlphabetPWM fromNaive(PWM originalPWM) {
-        return new SuperAlphabetPWM(makeSMMatrixFromMMatrix(originalPWM.matrix), originalPWM.motif_length());
+        return new SuperAlphabetPWM(makeSMMatrixFromMMatrix(originalPWM.matrix), originalPWM.length());
     }
 
     private static double[][] makeSMMatrixFromMMatrix(double[][] matrix) {
@@ -55,7 +55,7 @@ public class SuperAlphabetPWM implements MonoMotif<SuperAlphabetPWM, SuperAlphab
     }
 
     @Override
-    public int motif_length() {
+    public int length() {
         return motifLength;
     }
 }

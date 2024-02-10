@@ -75,7 +75,7 @@ public class DPWM implements DiMotif<DPWM, DSequence> {
     }
 
     @Override
-    public int motif_length() {
+    public int length() {
         return matrix.length + 1;
     }
 }

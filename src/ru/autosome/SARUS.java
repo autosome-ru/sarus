@@ -22,7 +22,7 @@ public class SARUS extends ru.autosome.cli.SARUS {
         this.motifSA = SuperAlphabetPWM.fromNaive(this.motif);
     }
 
-    @Override public int motif_length() { return this.motif.motif_length(); }
+    @Override public int motif_length() { return this.motif.length(); }
 
     @Override
     public String classNameHelp() {

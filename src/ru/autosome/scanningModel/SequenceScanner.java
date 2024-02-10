@@ -4,7 +4,6 @@ import ru.autosome.Occurrence;
 import ru.autosome.ResultFormatter;
 import ru.autosome.Strand;
 import ru.autosome.motifModel.Motif;
-import ru.autosome.motifModel.mono.PWM;
 import ru.autosome.sequenceModel.AbstractSequence;
 
 import java.util.function.Consumer;

@@ -42,7 +42,7 @@ public abstract class SARUS {
     public abstract String precalculateThresholdsPkgHelp();
     protected abstract void loadMotif() throws IOException;
     public abstract int motif_length();
-    public abstract SequenceScanner makeScanner(String str);
+    public abstract SequenceScanner<?, ?> makeScanner(String str);
 
     public String helpString() {
         return "Usage:\n" +
@@ -145,17 +145,13 @@ public abstract class SARUS {
                 argsList.remove(arg_index);
             }
         }
-
-        this.addFlanks = false;
-        if (argsList.remove("--add-flanks")) {
-            this.addFlanks = true;
-        }
+        this.addFlanks = argsList.remove("--add-flanks");
 
         if (argsList.size() != 3) {
             System.err.print(
                     "Error: some arguments or parameters not recognized.\n" +
                             "Please check the following arguments (there must be 3 required arguments and some non-recognized options:\n");
-            List<String> requiredArgs = argsList.subList(0, (argsList.size() < 3) ? argsList.size() : 3);
+            List<String> requiredArgs = argsList.subList(0, Math.min(argsList.size(), 3));
             System.err.println("  Required (" + requiredArgs.size() + " of 3):");
             System.err.println(String.join("\n", requiredArgs.stream().map(arg -> "*\t" + arg).collect(Collectors.toList())));
             if (argsList.size() > 3) {

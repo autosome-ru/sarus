@@ -24,7 +24,7 @@ public class SuperAlphabetDPWM implements DiMotif<SuperAlphabetDPWM, SuperAlphab
     }
 
     public static SuperAlphabetDPWM fromNaive(DPWM originalDPWM) {
-        return new SuperAlphabetDPWM(makeSDMatrixFromDMatrix(originalDPWM.matrix), originalDPWM.motif_length());
+        return new SuperAlphabetDPWM(makeSDMatrixFromDMatrix(originalDPWM.matrix), originalDPWM.length());
     }
 
     private static double[][] makeSDMatrixFromDMatrix(double[][] matrix) {
@@ -58,7 +58,7 @@ public class SuperAlphabetDPWM implements DiMotif<SuperAlphabetDPWM, SuperAlphab
     }
 
     @Override
-    public int motif_length() {
+    public int length() {
         return motifLength;
     }
 }
