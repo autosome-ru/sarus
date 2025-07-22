@@ -71,7 +71,7 @@ public abstract class SARUS {
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides (in pfm-sum-occupancy mode it's implied).\n" +
                 "  [--pfm-pseudocount] - Add pseudocount to PFM frequencies.\n" +
-                "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
+                "  [--naive] - Don't use superalphabet-based scoring algorithm (in pfm-sum-occupancy mode it's implied)\n" +
                 "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
                 "  [--add-flanks] - Add polyN-flanks to sequences so that long motif could match short sequence.\n" +
                 "                   In this mode every sequence will have besthit.\n" +
@@ -243,15 +243,15 @@ public abstract class SARUS {
                     N_isPermitted = false;
                 }
                 PFM motif = PFM.readMPFM(motif_filename, N_isPermitted, pfmPseudocount, transpose);
-                if (naive) {
-                    Sequence sequence = Sequence.sequenceFromString(flankedSequence);
-                    PFMOccupancyScanner scanner = new PFMOccupancyScanner(motif, sequence, scanDirect, scanRevcomp);
-                    SumOccupancyCollector sumCollector = new SumOccupancyCollector();
-                    scanner.processAllPositions(sumCollector);
-                    System.out.println(sumCollector.getSum());
-                } else {
-                    throw new IllegalArgumentException("Only naive algorithm is implemented for PPM occupancy");
+                if (!naive) {
+                    System.err.println("Warning: only naive algorithm is implemented for PFM sum occupancy");
+                    naive = true;
                 }
+                Sequence sequence = Sequence.sequenceFromString(flankedSequence);
+                PFMOccupancyScanner scanner = new PFMOccupancyScanner(motif, sequence, scanDirect, scanRevcomp);
+                SumOccupancyCollector sumCollector = new SumOccupancyCollector();
+                scanner.processAllPositions(sumCollector);
+                System.out.println(sumCollector.getSum());
 
             } else {
                 SequenceScanner<?, ?> scanner = makeScanner(flankedSequence);
