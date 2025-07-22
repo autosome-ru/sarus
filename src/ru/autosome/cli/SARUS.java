@@ -69,7 +69,7 @@ public abstract class SARUS {
                 "  [--direct|--revcomp] - scan only direct/revcomp strand of DNA\n" +
                 "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format).\n" +
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
-                "  [--skipn] - Skip words with N-nucleotides.\n" +
+                "  [--skipn] - Skip words with N-nucleotides (in pfm-sum-occupancy mode it's implied).\n" +
                 "  [--pfm-pseudocount] - Add pseudocount to PFM frequencies.\n" +
                 "  [--naive] - Don't use superalphabet-based scoring algorithm\n" +
                 "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
@@ -238,6 +238,10 @@ public abstract class SARUS {
             String flankedSequence = flank + namedSequence.getSequence() + flank;
 
             if (lookForSumOccupancy) {
+                if (N_isPermitted) {
+                    System.err.println("Warning: [--skipn] option is implied in pfm-sum-occupancy mode");
+                    N_isPermitted = false;
+                }
                 PFM motif = PFM.readMPFM(motif_filename, N_isPermitted, pfmPseudocount, transpose);
                 if (naive) {
                     Sequence sequence = Sequence.sequenceFromString(flankedSequence);

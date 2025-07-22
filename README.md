@@ -6,7 +6,7 @@ This is a simple tool which uses superalphabet approach
 presented by [Pizzi, Rastas & Ukkonen; 2007] to scan a given set 
 of sequences for (di)PWM hits scoring no less than a given threshold. 
 
-Current release: 2.1.0.
+Current release: 2.2.0.
 
 ### Key features: 
 * provides bed + plain text output
@@ -73,6 +73,7 @@ instead of the corresponding filename.
 Starting from v2.1.0 SPRY-SARUS provides a new (experimental) mode — sum occupancy. 
 In that mode one should provide not a weight matrix but a count/frequency matrix. The only number with sum of occupancies will be reported.
 It is not normed by the sequence length so it can be arbitary high. Only mononucleotide naive algorithm is applied for now.
+Occurrences with N-s (unknown nucleotides) are skipped in this mode.
 
 To run use the following syntax:
 
