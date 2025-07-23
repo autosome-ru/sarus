@@ -54,7 +54,7 @@ public abstract class SARUS {
                 "  or\n" +
                 "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> besthit [options]\n" +
                 "  or\n" +
-                "java -cp " + classNameHelp() + " <sequences.multifasta> <frequency.matrix> pfm-sum-occupancy [options]\n" +
+                "java -cp " + classNameHelp() + " <sequences.multifasta> <count_or_frequency.matrix> pfm-sum-occupancy [options]\n" +
                 "Options:\n" +
                 "  [--transpose] - use transposed PWM (rows correspond to " + rowContentHelp() + ", columns are positions)\n" +
                 "  [--pvalues-file FILE] - specify PWM score <--> P-value conversion.\n" +
@@ -66,7 +66,8 @@ public abstract class SARUS {
                 "                   FASTA headers should be like chr1:23 (or chr1:23-45 or chr1:23..45,+)\n" +
                 "                   `bedtools getfasta` generates headers in matching format\n" +
                 "  [--precision N] - round result (either score or P-value) up to N digits after floating point\n" +
-                "  [--direct|--revcomp] - scan only direct/revcomp strand of DNA\n" +
+                "  [--direct | --revcomp] - scan only direct/revcomp strand (useful for RNA-scanning)\n" +
+                "                           Note that U and T use the same internal representation to streamline RNA sequence scanning\n" +
                 "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format).\n" +
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides (in pfm-sum-occupancy mode it's implied).\n" +
@@ -252,7 +253,6 @@ public abstract class SARUS {
                 SumOccupancyCollector sumCollector = new SumOccupancyCollector();
                 scanner.processAllPositions(sumCollector);
                 System.out.println(sumCollector.getSum());
-
             } else {
                 SequenceScanner<?, ?> scanner = makeScanner(flankedSequence);
                 if (lookForBestHit) {

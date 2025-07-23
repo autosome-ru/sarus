@@ -17,6 +17,7 @@ public class Assistant {
             case 'g':
                 return 2;
             case 't':
+            case 'u':
                 return 3;
             case 'n':
                 return 4;

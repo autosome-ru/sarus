@@ -72,12 +72,12 @@ instead of the corresponding filename.
 
 Starting from v2.1.0 SPRY-SARUS provides a new (experimental) mode — sum occupancy. 
 In that mode one should provide not a weight matrix but a count/frequency matrix. The only number with sum of occupancies will be reported.
-It is not normed by the sequence length so it can be arbitary high. Only mononucleotide naive algorithm is applied for now.
+It is not normed by the sequence length so it can be arbitrary high. Only mononucleotide naive algorithm is applied for now.
 Occurrences with N-s (unknown nucleotides) are skipped in this mode.
 
 To run use the following syntax:
 
-```java -cp sarus.jar ru.autosome.SARUS <sequences.multifasta> <count.matrix> pfm-sum-occupancy --naive --pfm-pseudocount 0.001```
+```java -cp sarus.jar ru.autosome.SARUS <sequences.multifasta> <count_or_frequency.matrix> pfm-sum-occupancy --naive --pfm-pseudocount 0.001```
 
 
 ### Weight matrix format
@@ -102,7 +102,11 @@ is treated and what should be modified in the output:
     suggests SARUS to use the transposed file format for the matrices (nucleotides or dinucleotides as rows, motif positions as columns).
 * `--direct` or `--revcomp`
     forces single strand scanning mode to
-    scan only the direct strand or only reverse-complementary strand
+    scan only the direct strand or only reverse-complementary strand.
+    Useful for RNA-scanning.
+
+    Note that U and T use the same internal representation
+    to streamline RNA sequence scanning.
 *  `--skipn`
     can be used to skip words with an unknown (N)-nucleotides.
 *  `--precision N`
