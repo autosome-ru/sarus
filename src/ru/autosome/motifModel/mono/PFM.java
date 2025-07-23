@@ -27,16 +27,23 @@ public class PFM implements Motif<PFM, Sequence> {
         return score;
     }
 
-    public static double[][] normalizeMatrix(double[][] matrix) {
+    public static double[][] normalizeMatrix(double[][] matrix, boolean warn_about_normalization) {
+        boolean should_warn = false;
         double[][] result = new double[matrix.length][4];
         for (int i = 0; i < matrix.length; i++) {
             double sum = 0.0;
             for (int letter = 0; letter < 4; ++letter) {
                 sum += matrix[i][letter];
             }
+            if (Math.abs(sum - 1.0) > 0.01) {
+                should_warn = true;
+            }
             for (int letter = 0; letter < 4; ++letter) {
                 result[i][letter] = matrix[i][letter] / sum;
             }
+        }
+        if (warn_about_normalization && should_warn) {
+            System.err.println("Warning: PCM was transformed into PFM.");
         }
         return result;
     }
@@ -68,7 +75,8 @@ public class PFM implements Motif<PFM, Sequence> {
         ArrayList<String> strings = Assistant.load(path);
         ArrayList<Double[]> parsed = Assistant.parseMono(strings, transpose);
         double[][] matrix = listDoubleRowsToMatrix(parsed);
-        return new PFM(matrixAcceptingN(withPseudocount(normalizeMatrix(matrix), pseudocount), N_isPermitted));
+        // `withPseudocount` internally renormalizes matrix, so no need to normalize it once again
+        return new PFM(matrixAcceptingN(withPseudocount(normalizeMatrix(matrix, true), pseudocount), N_isPermitted));
     }
 
     @Override

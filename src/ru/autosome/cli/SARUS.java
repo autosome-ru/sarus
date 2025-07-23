@@ -71,7 +71,7 @@ public abstract class SARUS {
                 "  [--motif-name NAME] - motif name is included into interval name (the 4-th column in BED-6 format).\n" +
                 "                        By default is inferred from PWM filename but can be redefined with this option.\n" +
                 "  [--skipn] - Skip words with N-nucleotides (in pfm-sum-occupancy mode it's implied).\n" +
-                "  [--pfm-pseudocount] - Add pseudocount to PFM frequencies.\n" +
+                "  [--pfm-pseudocount] - Add pseudocount to PFM/PCM frequencies (not counts!) in pfm-sum-occupancy mode.\n" +
                 "  [--naive] - Don't use superalphabet-based scoring algorithm (in pfm-sum-occupancy mode it's implied)\n" +
                 "  [--[no-]suppress] - Don't print sequence names (by default suppressed when output in BED-format)\n" +
                 "  [--add-flanks] - Add polyN-flanks to sequences so that long motif could match short sequence.\n" +
