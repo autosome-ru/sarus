@@ -6,7 +6,7 @@ This is a simple tool which uses superalphabet approach
 presented by [Pizzi, Rastas & Ukkonen; 2007] to scan a given set 
 of sequences for (di)PWM hits scoring no less than a given threshold. 
 
-Current release: 2.2.1.
+Current release: 2.2.2.
 
 ### Key features: 
 * provides bed + plain text output
@@ -19,7 +19,7 @@ SPRY-SARUS has fairly simple command line format,
 accepts weight matrices in plain text files (with log-odds 
 or similarly transformed additive weights) and DNA sequences in multifasta. 
 
-SPRY-SARUS is written in Java (and requires Java 1.8 or more recent). You can get it as the [jar file](https://raw.githubusercontent.com/autosome-ru/sarus/master/releases/sarus-2.2.1.jar).
+SPRY-SARUS is written in Java (and requires Java 1.8 or more recent). You can get it as the [jar file](https://raw.githubusercontent.com/autosome-ru/sarus/master/releases/sarus-2.2.2.jar).
 You can experiment with sample PWMs and sequences in [examples](https://github.com/autosome-ru/sarus/tree/master/examples) folder.
 
 The proper command line format is printed if SARUS is executed w/o arguments:
@@ -70,7 +70,7 @@ The multi-FASTA with sequences and the weight matrix file are specified by the c
 Sequences can be also be passed via the standard input (stdin) by specifying minus (`-`)
 instead of the corresponding filename.
 
-Starting from v2.1.0 SPRY-SARUS provides a new (experimental) mode — sum occupancy. 
+Additionally, SPRY-SARUS provides a `pfm-sum-occupancy` scoring mode.
 In that mode one should provide not a weight matrix but a count/frequency matrix. The only number with sum of occupancies will be reported.
 It is not normed by the sequence length so it can be arbitrary high. Only mononucleotide naive algorithm is applied for now.
 Occurrences with N-s (unknown nucleotides) are skipped in this mode.
