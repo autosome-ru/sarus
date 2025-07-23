@@ -48,6 +48,8 @@ public abstract class SARUS {
     public abstract int motif_length();
     public abstract SequenceScanner<?, ?> makeScanner(String str);
 
+    protected abstract void loadPFMMotif() throws IOException;
+
     public String helpString() {
         return "Usage:\n" +
                 "java -cp " + classNameHelp() + " <sequences.multifasta> <weight.matrix> <threshold> [options]\n" +
@@ -213,7 +215,11 @@ public abstract class SARUS {
             this.threshold = inputScoringModel.valueInScoreUnits(Double.parseDouble(modeOrThreshold), pvalueBsearchList);
         }
 
-        loadMotif();
+        if (modeOrThreshold.matches("pfm-sum-occupancy")) {
+            loadPFMMotif();
+        } else {
+            loadMotif();
+        }
     }
 
     public void run() throws IOException {
@@ -239,17 +245,8 @@ public abstract class SARUS {
             String flankedSequence = flank + namedSequence.getSequence() + flank;
 
             if (lookForSumOccupancy) {
-                if (N_isPermitted) {
-                    System.err.println("Warning: [--skipn] option is implied in pfm-sum-occupancy mode");
-                    N_isPermitted = false;
-                }
-                PFM motif = PFM.readMPFM(motif_filename, N_isPermitted, pfmPseudocount, transpose);
-                if (!naive) {
-                    System.err.println("Warning: only naive algorithm is implemented for PFM sum occupancy");
-                    naive = true;
-                }
                 Sequence sequence = Sequence.sequenceFromString(flankedSequence);
-                PFMOccupancyScanner scanner = new PFMOccupancyScanner(motif, sequence, scanDirect, scanRevcomp);
+                SequenceScanner<?, ?> scanner = makePFMScanner(sequence);
                 SumOccupancyCollector sumCollector = new SumOccupancyCollector();
                 scanner.processAllPositions(sumCollector);
                 System.out.println(sumCollector.getSum());
@@ -264,4 +261,5 @@ public abstract class SARUS {
         }
     }
 
+    protected abstract SequenceScanner<?,?> makePFMScanner(Sequence sequence);
 }

@@ -7,6 +7,8 @@ import ru.autosome.scanningModel.SequenceScanner;
 import ru.autosome.scanningModel.SuperAlphabetDPWMScanner;
 import ru.autosome.sequenceModel.di.DSequence;
 import ru.autosome.sequenceModel.di.SuperAlphabetDSequence;
+import ru.autosome.sequenceModel.mono.Sequence;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,6 +54,17 @@ public class SARUS extends ru.autosome.cli.SARUS {
         }
     }
 
+    @Override
+    protected void loadPFMMotif() throws IOException {
+        // PFM sum occupancy not yet implemented for dinucleotide motifs
+        throw new NotImplementedException();
+    }
+
+    @Override
+    protected SequenceScanner<?, ?> makePFMScanner(Sequence sequence) {
+        // PFM sum occupancy not yet implemented for dinucleotide motifs
+        throw new NotImplementedException();
+    }
 
     public static void main(String[] args) throws IOException {
         ru.autosome.di.SARUS cli = new ru.autosome.di.SARUS();

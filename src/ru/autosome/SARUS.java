@@ -1,7 +1,9 @@
 package ru.autosome;
 
+import ru.autosome.motifModel.mono.PFM;
 import ru.autosome.motifModel.mono.PWM;
 import ru.autosome.motifModel.mono.SuperAlphabetPWM;
+import ru.autosome.scanningModel.PFMOccupancyScanner;
 import ru.autosome.scanningModel.PWMScanner;
 import ru.autosome.scanningModel.SequenceScanner;
 import ru.autosome.scanningModel.SuperAlphabetPWMScanner;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 
 public class SARUS extends ru.autosome.cli.SARUS {
     protected PWM motif;
+    protected PFM pfm_motif;
     protected SuperAlphabetPWM motifSA;
 
     @Override
@@ -22,7 +25,13 @@ public class SARUS extends ru.autosome.cli.SARUS {
         this.motifSA = SuperAlphabetPWM.fromNaive(this.motif);
     }
 
-    @Override public int motif_length() { return this.motif.length(); }
+    @Override public int motif_length() {
+        if (lookForSumOccupancy) {
+            return this.pfm_motif.length();
+        } else {
+            return this.motif.length();
+        }
+    }
 
     @Override
     public String classNameHelp() {
@@ -50,6 +59,25 @@ public class SARUS extends ru.autosome.cli.SARUS {
             SuperAlphabetSequence sequenceSA = SuperAlphabetSequence.sequenceFromString(str);
             return new SuperAlphabetPWMScanner(this.motifSA, sequenceSA, scanDirect, scanRevcomp);
         }
+    }
+
+    @Override
+    protected void loadPFMMotif() throws IOException {
+        if (N_isPermitted) {
+            System.err.println("Warning: [--skipn] option is implied in pfm-sum-occupancy mode");
+            this.N_isPermitted = false;
+        }
+        if (!naive) {
+            System.err.println("Warning: only naive algorithm is implemented for PFM sum occupancy");
+            this.naive = true;
+        }
+        PFM motif = PFM.readMPFM(motif_filename, N_isPermitted, pfmPseudocount, transpose);
+        this.pfm_motif = motif;
+    }
+
+    @Override
+    protected SequenceScanner<?, ?> makePFMScanner(Sequence sequence) {
+        return new PFMOccupancyScanner(pfm_motif, sequence, scanDirect, scanRevcomp);
     }
 
     public static void main(String[] args) throws IOException {
